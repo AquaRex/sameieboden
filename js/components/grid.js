@@ -1,7 +1,7 @@
 import { el, clear } from "../dom.js";
 import { createCard } from "./card.js";
 
-export function createGrid({ editable, onEdit, onDelete, view = "grid" }) {
+export function createGrid({ editable, onEdit, onDelete, onOpen, view = "grid" }) {
   const list = el("ul", {
     id: "grid",
     class: `items items--${view}`,
@@ -22,7 +22,7 @@ export function createGrid({ editable, onEdit, onDelete, view = "grid" }) {
   function render(filtered, total) {
     clear(list);
     for (const item of filtered) {
-      list.appendChild(createCard(item, { editable, onEdit, onDelete }));
+      list.appendChild(createCard(item, { editable, onEdit, onDelete, onOpen }));
     }
     empty.hidden = filtered.length !== 0;
     count.textContent =

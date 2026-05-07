@@ -10,6 +10,7 @@ import { createGrid } from "./components/grid.js";
 import { createEditor } from "./components/editor.js";
 import { createToolbar } from "./components/toolbar.js";
 import { createViewToggle } from "./components/viewToggle.js";
+import { createLightbox } from "./components/lightbox.js";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js";
 
 const editable = isLocal();
@@ -41,7 +42,15 @@ const grid = createGrid({
   onDelete: (item) => {
     if (confirm(`Slette "${item.name}"?`)) store.remove(item.id);
   },
+  onOpen: (item) => {
+    const list = lastFiltered;
+    const idx = list.findIndex((it) => it.id === item.id);
+    lightbox.open(list, Math.max(0, idx));
+  },
 });
+
+const lightbox = createLightbox();
+let lastFiltered = [];
 
 const editor = editable
   ? createEditor({
@@ -52,7 +61,10 @@ const editor = editable
         if (data.image && data.image.startsWith("data:")) {
           try {
             const path = await uploadImage(slugify(data.name), data.image);
-            data.image = path;
+            // Cache-bust so a replaced image at the same path shows up
+            // immediately in the browser (the file on disk is overwritten,
+            // but its URL is otherwise identical).
+            data.image = `${path}?v=${Date.now()}`;
           } catch (err) {
             console.warn("Image upload failed, keeping inline data URL:", err);
           }
@@ -114,6 +126,7 @@ if (editable) {
 
 function rerender(items = store.getAll()) {
   const filtered = filterItems(items, { query: currentQuery, tag: currentTag });
+  lastFiltered = filtered;
   grid.render(filtered, items.length);
 }
 

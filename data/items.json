@@ -6,7 +6,9 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/rive.jpg",
+    "imagePos": "82.3% 52.9%",
+    "imageZoom": 1.24
   },
   {
     "id": "seed-2",
@@ -15,7 +17,9 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/plantespade.jpg",
+    "imagePos": "50.0% 14.8%",
+    "imageZoom": 1
   },
   {
     "id": "seed-3",
@@ -24,7 +28,9 @@
     "tags": [
       "hage"
     ],
-    "image": "images/beskjaeringssaks.jpg"
+    "image": "images/beskjaeringssaks.jpg?v=1778189511332",
+    "imagePos": "100.0% 26.4%",
+    "imageZoom": 1.0546198473777084
   },
   {
     "id": "seed-4",
@@ -33,7 +39,9 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/ugressfjerner.jpg?v=1778189552166",
+    "imagePos": "78.4% 73.8%",
+    "imageZoom": 1.44
   },
   {
     "id": "seed-5",
@@ -42,7 +50,9 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/hekksaks.jpg",
+    "imagePos": "50.0% 6.6%",
+    "imageZoom": 1
   },
   {
     "id": "seed-6",
@@ -51,7 +61,9 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/kultivator.jpg",
+    "imagePos": "50.0% 12.6%",
+    "imageZoom": 1
   },
   {
     "id": "seed-7",
@@ -60,6 +72,8 @@
     "tags": [
       "hage"
     ],
-    "image": ""
+    "image": "images/spisspade.jpg?v=1778189542345",
+    "imagePos": "71.9% 63.6%",
+    "imageZoom": 1.31
   }
 ]

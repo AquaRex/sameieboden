@@ -1,14 +1,21 @@
 import { el } from "../dom.js";
 
-export function createCard(item, { editable, onEdit, onDelete }) {
+export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
   const media = item.image
-    ? el("img", {
-        class: "card-image",
-        src: item.image,
-        alt: item.name,
-        loading: "lazy",
-        onerror: (e) => e.target.replaceWith(placeholder()),
-      })
+    ? el("div", { class: "card-image-wrap" }, [
+        el("img", {
+          class: "card-image",
+          src: item.image,
+          alt: item.name,
+          loading: "lazy",
+          style: {
+            objectPosition: item.imagePos || "50% 50%",
+            transformOrigin: item.imagePos || "50% 50%",
+            transform: `scale(${item.imageZoom || 1})`,
+          },
+          onerror: (e) => e.target.parentElement.replaceWith(placeholder()),
+        }),
+      ])
     : placeholder();
 
   const tags = el(
@@ -23,7 +30,24 @@ export function createCard(item, { editable, onEdit, onDelete }) {
     tags,
   ]);
 
-  const card = el("li", { class: "card", dataset: { id: item.id } }, [media, body]);
+  const card = el("li", {
+    class: "card",
+    dataset: { id: item.id },
+    tabindex: "0",
+    role: "button",
+    "aria-label": `Vis ${item.name}`,
+    onclick: (e) => {
+      if (e.target.closest("button")) return;
+      onOpen?.(item);
+    },
+    onkeydown: (e) => {
+      if (e.target.closest("button")) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        onOpen?.(item);
+      }
+    },
+  }, [media, body]);
 
   if (editable) {
     card.appendChild(
@@ -34,7 +58,7 @@ export function createCard(item, { editable, onEdit, onDelete }) {
           title: "Rediger",
           "aria-label": "Rediger " + item.name,
           textContent: "✎",
-          onclick: () => onEdit(item),
+          onclick: (e) => { e.stopPropagation(); onEdit(item); },
         }),
         el("button", {
           type: "button",
@@ -42,7 +66,7 @@ export function createCard(item, { editable, onEdit, onDelete }) {
           title: "Slett",
           "aria-label": "Slett " + item.name,
           textContent: "🗑",
-          onclick: () => onDelete(item),
+          onclick: (e) => { e.stopPropagation(); onDelete(item); },
         }),
       ])
     );
@@ -52,5 +76,5 @@ export function createCard(item, { editable, onEdit, onDelete }) {
 }
 
 function placeholder() {
-  return el("div", { class: "card-image placeholder", "aria-hidden": "true", textContent: "🛠" });
+  return el("div", { class: "card-image-wrap card-image placeholder", "aria-hidden": "true", textContent: "🛠" });
 }
