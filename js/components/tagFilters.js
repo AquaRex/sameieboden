@@ -1,4 +1,4 @@
-import { el, clear } from "../dom.js";
+import { el, clear } from "../dom.js?v=3";
 
 export function createTagFilters({ onChange }) {
   const root = el("div", { class: "tag-filters", role: "group", "aria-label": "Filtrer på tag" });

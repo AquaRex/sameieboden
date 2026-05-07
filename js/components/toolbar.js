@@ -1,6 +1,6 @@
 // Local-only toolbar: add new entry, import/export JSON, reset.
 
-import { el } from "../dom.js";
+import { el } from "../dom.js?v=3";
 
 export function createToolbar({ onAdd, onImport, onExport, onReset }) {
   const fileInput = el("input", {

@@ -47,6 +47,19 @@ Modalen lar deg skrive navn, beskrivelse, dra/velge bilde, og legge til tags –
 - Hvis du redigerer uten dev-serveren (f.eks. ren `http.server`) faller den tilbake til å lagre i `localStorage` – endringer blir ikke skrevet til disk.
 - `js/defaultData.js` brukes kun som fallback hvis `data/items.json` mangler eller er tom.
 
+## Caching og publisering
+
+Siden er bygget for å hindre at besøkende ser utdatert innhold:
+
+- HTML-en sender `Cache-Control: no-cache` (via meta-tag), så nettleseren revaliderer på hvert besøk.
+- `data/items.json` hentes alltid med `cache: "no-store"` – nye eller endrede oppføringer dukker opp umiddelbart.
+- Bilder som **byttes ut** får automatisk `?v=<timestamp>` i stien så nettleseren henter den nye fila i stedet for den cachede.
+- JS- og CSS-filer har en `?v=N`-versjon i `index.html` og i alle imports.
+
+**Når du endrer kode (JS/CSS):** kjør `python3 bump_version.py` før du pusher. Det bumper versjonsstrengen i alle imports og asset-referanser, så besøkende garantert får den nye koden selv om de hadde den gamle cachet.
+
+**Når du bare endrer innhold (oppføringer/bilder):** ingen bump nødvendig. items.json er allerede no-store, og bilder cache-bustes automatisk.
+
 ## Filstruktur
 
 ```

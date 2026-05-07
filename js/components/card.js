@@ -1,4 +1,4 @@
-import { el } from "../dom.js";
+import { el } from "../dom.js?v=3";
 
 export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
   const media = item.image

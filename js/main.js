@@ -1,17 +1,17 @@
 // Application entry point. Wires together store, components and events.
 // Each module knows as little as possible about the others.
 
-import { isLocal } from "./env.js";
-import { store } from "./store.js";
-import { filterItems } from "./search.js";
-import { createSearchBar } from "./components/searchBar.js";
-import { createTagFilters } from "./components/tagFilters.js";
-import { createGrid } from "./components/grid.js";
-import { createEditor } from "./components/editor.js";
-import { createToolbar } from "./components/toolbar.js";
-import { createViewToggle } from "./components/viewToggle.js";
-import { createLightbox } from "./components/lightbox.js";
-import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js";
+import { isLocal } from "./env.js?v=3";
+import { store } from "./store.js?v=3";
+import { filterItems } from "./search.js?v=3";
+import { createSearchBar } from "./components/searchBar.js?v=3";
+import { createTagFilters } from "./components/tagFilters.js?v=3";
+import { createGrid } from "./components/grid.js?v=3";
+import { createEditor } from "./components/editor.js?v=3";
+import { createToolbar } from "./components/toolbar.js?v=3";
+import { createViewToggle } from "./components/viewToggle.js?v=3";
+import { createLightbox } from "./components/lightbox.js?v=3";
+import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -64,7 +64,7 @@ const editor = editable
             // Cache-bust so a replaced image at the same path shows up
             // immediately in the browser (the file on disk is overwritten,
             // but its URL is otherwise identical).
-            data.image = `${path}?v=${Date.now()}`;
+            data.image = `${path}?v=3)}`;
           } catch (err) {
             console.warn("Image upload failed, keeping inline data URL:", err);
           }

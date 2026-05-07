@@ -1,7 +1,7 @@
 // Full-image lightbox. Opens a modal showing item.image at full size,
 // with prev/next navigation via on-screen buttons or arrow keys.
 
-import { el, clear } from "../dom.js";
+import { el, clear } from "../dom.js?v=3";
 
 export function createLightbox() {
   let items = [];

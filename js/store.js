@@ -2,8 +2,8 @@
 // Pub/sub so any component can react to changes without
 // knowing about other components.
 
-import { DEFAULT_EQUIPMENT } from "./defaultData.js";
-import { uid } from "./dom.js";
+import { DEFAULT_EQUIPMENT } from "./defaultData.js?v=3";
+import { uid } from "./dom.js?v=3";
 
 const STORAGE_KEY = "bvs.equipment.v1";
 

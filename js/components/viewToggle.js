@@ -1,4 +1,4 @@
-import { el } from "../dom.js";
+import { el } from "../dom.js?v=3";
 
 const STORAGE_KEY = "bvs.viewMode.v1";
 const VALID = new Set(["grid", "list"]);

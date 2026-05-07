@@ -1,7 +1,7 @@
 // Modal editor for adding or editing an equipment entry.
 // Self-contained: it owns its own DOM and exposes open()/close().
 
-import { el, clear } from "../dom.js";
+import { el, clear } from "../dom.js?v=3";
 
 const MAX_IMAGE_BYTES = 600 * 1024; // ~600KB after compression
 
