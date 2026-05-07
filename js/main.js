@@ -10,6 +10,7 @@ import { createGrid } from "./components/grid.js";
 import { createEditor } from "./components/editor.js";
 import { createToolbar } from "./components/toolbar.js";
 import { createViewToggle } from "./components/viewToggle.js";
+import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -45,7 +46,17 @@ const grid = createGrid({
 const editor = editable
   ? createEditor({
       getKnownTags: () => store.allTags(),
-      onSave: (mode, id, data) => {
+      onSave: async (mode, id, data) => {
+        // If a fresh image was dropped (data URL), upload it as a real file
+        // first so the public site can serve it from images/.
+        if (data.image && data.image.startsWith("data:")) {
+          try {
+            const path = await uploadImage(slugify(data.name), data.image);
+            data.image = path;
+          } catch (err) {
+            console.warn("Image upload failed, keeping inline data URL:", err);
+          }
+        }
         if (mode === "edit" && id) store.update(id, data);
         else store.add(data);
       },
@@ -79,6 +90,27 @@ store.subscribe((items) => {
   tagFilters.setTags(store.allTags());
   rerender(items);
 });
+
+// --- bootstrap from data/items.json (source of truth for the public site) ---
+let initialLoadDone = false;
+loadItems().then((items) => {
+  if (items) store.replaceAll(items);
+  initialLoadDone = true;
+});
+
+// --- push edits back to the dev server so they end up in git ---
+if (editable) {
+  let saveTimer = null;
+  store.subscribe(() => {
+    if (!initialLoadDone) return; // don't echo the initial load back
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      saveItems(store.getAll()).catch((err) => {
+        console.warn("Could not save items.json (is dev_server.py running?)", err);
+      });
+    }, 250);
+  });
+}
 
 function rerender(items = store.getAll()) {
   const filtered = filterItems(items, { query: currentQuery, tag: currentTag });

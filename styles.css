@@ -433,7 +433,8 @@ html, body {
   background: var(--accent-soft);
   color: var(--accent);
 }
-.view-btn-icon { font-size: 0.95rem; line-height: 1; }
+.view-btn-icon { font-size: 0.95rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; }
+.view-btn-icon svg { width: 0.8em; height: 0.8em; fill: currentColor; display: block; }
 .view-btn-label { font-size: 0.85rem; }
 
 @media (max-width: 480px) {

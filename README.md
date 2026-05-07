@@ -6,11 +6,16 @@ En enkel, modulær, statisk nettside som viser oversikt over felles verktøy og 
 
 Siden bruker ES-moduler, så den må serveres over HTTP (ikke åpnes som `file://` i Chrome).
 
+For å redigere innhold som havner i git, bruk den medfølgende dev-serveren:
+
 ```sh
-# fra mappen til prosjektet
-python3 -m http.server 8000
-# eller:  npx serve .
+python3 dev_server.py            # http://localhost:8000
+python3 dev_server.py 8080       # annen port
 ```
+
+Den serverer sidene **og** tar imot bilder + endringer fra editoren og skriver dem til `images/` og `data/items.json`. Da kan du committe og pushe til GitHub Pages.
+
+Hvis du bare vil se på siden uten å redigere, holder det med en hvilken som helst statisk server (`python3 -m http.server`, `npx serve .` osv.).
 
 Åpne deretter `http://localhost:8000`.
 
@@ -33,11 +38,14 @@ Modalen lar deg skrive navn, beskrivelse, dra/velge bilde, og legge til tags –
 
 ## Datalagring
 
-- Endringer lagres i nettleserens `localStorage` under nøkkelen `bvs.equipment.v1`.
-- Bilder komprimeres til JPEG (~1000 px) og lagres som data-URL.
-- Eksporter til JSON for å versjonere endringene eller flytte dem til andre maskiner.
-
-For å gjøre dataen permanent for alle besøkende: Eksporter JSON, og bytt ut innholdet i `js/defaultData.js` med listen fra fila.
+- **Kilde for den publiserte siden**: `data/items.json`. Dette er fila som besøkende laster.
+- **Bilder**: lagres som vanlige filer i `images/` og refereres med relativ sti (f.eks. `images/rive.jpg`).
+- **Når du redigerer lokalt** med `dev_server.py`:
+  - Bilder du drar inn lastes opp til serveren og skrives til `images/<slug>.<ext>`.
+  - Hver endring (lagre, slette, redigere) PUT-es til serveren som overskriver `data/items.json`.
+  - Commit `images/` + `data/items.json` og push for å oppdatere den publiserte siden.
+- Hvis du redigerer uten dev-serveren (f.eks. ren `http.server`) faller den tilbake til å lagre i `localStorage` – endringer blir ikke skrevet til disk.
+- `js/defaultData.js` brukes kun som fallback hvis `data/items.json` mangler eller er tom.
 
 ## Filstruktur
 

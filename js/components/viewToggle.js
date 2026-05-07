@@ -11,7 +11,18 @@ function loadInitial() {
 export function createViewToggle({ onChange }) {
   let mode = loadInitial();
 
-  const gridBtn = makeBtn("grid", "Rutenett", "▦");
+  const gridIcon = `<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" focusable="false">
+    <rect x="0" y="0" width="2" height="2"/>
+    <rect x="4" y="0" width="2" height="2"/>
+    <rect x="8" y="0" width="2" height="2"/>
+    <rect x="0" y="4" width="2" height="2"/>
+    <rect x="4" y="4" width="2" height="2"/>
+    <rect x="8" y="4" width="2" height="2"/>
+    <rect x="0" y="8" width="2" height="2"/>
+    <rect x="4" y="8" width="2" height="2"/>
+    <rect x="8" y="8" width="2" height="2"/>
+  </svg>`;
+  const gridBtn = makeBtn("grid", "Rutenett", gridIcon);
   const listBtn = makeBtn("list", "Liste", "☰");
 
   const root = el(
@@ -30,7 +41,7 @@ export function createViewToggle({ onChange }) {
       dataset: { mode: value },
       onclick: () => set(value),
     }, [
-      el("span", { class: "view-btn-icon", "aria-hidden": "true", textContent: icon }),
+      el("span", { class: "view-btn-icon", "aria-hidden": "true", innerHTML: icon }),
       el("span", { class: "view-btn-label", textContent: label }),
     ]);
   }
