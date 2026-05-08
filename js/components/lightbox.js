@@ -34,16 +34,14 @@ export function createLightbox() {
 
   const stage = el("div", { class: "lb-stage" }, [imgEl]);
 
-  // macOS desktop handles trackpad pinch-zoom on images natively, better
-  // than we can emulate. Detect it as "Mac userAgent + no touch input".
-  // Everywhere else (Windows/Linux mouse, iOS, Android, iPad) we manage
-  // zoom ourselves so users can pinch / wheel into the image even though
-  // the lightbox is a fixed overlay.
-  const ua = navigator.userAgent || "";
+  // Only desktop mouse users (Windows/Linux/Chrome OS) get our custom
+  // wheel-zoom + drag-to-pan. macOS has good native trackpad pinch-zoom,
+  // and phones/tablets have native page pinch-zoom — in both cases we
+  // stay out of the way so the OS gestures work as expected.
   const platform = navigator.platform || "";
   const hasTouch = (navigator.maxTouchPoints || 0) > 0 || "ontouchstart" in window;
   const isMacDesktop = /Mac/.test(platform) && !hasTouch;
-  const useCustomZoom = !isMacDesktop;
+  const useCustomZoom = !isMacDesktop && !hasTouch;
 
   let zoom = 1;
   let panX = 0;
@@ -79,13 +77,10 @@ export function createLightbox() {
   }
 
   if (useCustomZoom) {
-    // Wheel / trackpad scroll → zoom (Windows/Linux mice).
     stage.addEventListener("wheel", (e) => {
       if (backdrop.hidden) return;
       e.preventDefault();
       const factor = Math.exp(-e.deltaY * 0.0015);
-      // If the cursor is outside the image, zoom toward the image center
-      // instead — otherwise the image flies away from the pointer.
       const rect = imgEl.getBoundingClientRect();
       const inside =
         e.clientX >= rect.left && e.clientX <= rect.right &&
@@ -96,81 +91,31 @@ export function createLightbox() {
       setZoom(zoom * factor, anchor);
     }, { passive: false });
 
-    // Multi-pointer state for touch pinch-zoom.
-    const pointers = new Map();
-    let pinchStartDist = 0;
-    let pinchStartZoom = 1;
-    let pinchAnchor = { x: 0, y: 0 };
-    let panStart = null; // { x, y, panX, panY }
-
-    function pointerDistance() {
-      const [a, b] = [...pointers.values()];
-      const dx = a.x - b.x;
-      const dy = a.y - b.y;
-      return Math.hypot(dx, dy);
-    }
-    function pointerMid() {
-      const [a, b] = [...pointers.values()];
-      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-    }
-
+    let startX = 0, startY = 0, startPanX = 0, startPanY = 0;
     imgEl.addEventListener("pointerdown", (e) => {
+      if (e.pointerType !== "mouse" || zoom <= 1) return;
+      e.preventDefault();
       e.stopPropagation();
-      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      startPanX = panX; startPanY = panY;
       try { imgEl.setPointerCapture(e.pointerId); } catch {}
-      if (pointers.size === 2) {
-        // Start pinch.
-        dragging = false;
-        panStart = null;
-        pinchStartDist = pointerDistance();
-        pinchStartZoom = zoom;
-        pinchAnchor = pointerMid();
-      } else if (pointers.size === 1 && zoom > 1) {
-        // Start pan.
-        dragging = true;
-        panStart = { x: e.clientX, y: e.clientY, panX, panY };
-        applyTransform();
-      }
+      applyTransform();
     });
-
     imgEl.addEventListener("pointermove", (e) => {
-      if (!pointers.has(e.pointerId)) return;
-      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
-      if (pointers.size === 2 && pinchStartDist > 0) {
-        e.preventDefault();
-        const dist = pointerDistance();
-        const ratio = dist / pinchStartDist;
-        const target = pinchStartZoom * ratio;
-        const mid = pointerMid();
-        setZoom(target, mid);
-        pinchAnchor = mid;
-      } else if (dragging && panStart) {
-        panX = panStart.panX + (e.clientX - panStart.x);
-        panY = panStart.panY + (e.clientY - panStart.y);
-        applyTransform();
-      }
+      if (!dragging) return;
+      panX = startPanX + (e.clientX - startX);
+      panY = startPanY + (e.clientY - startY);
+      applyTransform();
     });
-
-    function endPointer(e) {
-      if (!pointers.has(e.pointerId)) return;
-      pointers.delete(e.pointerId);
+    const stopDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
       try { imgEl.releasePointerCapture(e.pointerId); } catch {}
-      if (pointers.size < 2) {
-        pinchStartDist = 0;
-      }
-      if (pointers.size === 0) {
-        dragging = false;
-        panStart = null;
-        applyTransform();
-      } else if (pointers.size === 1 && zoom > 1) {
-        // Switched from pinch to single-finger pan.
-        const [only] = [...pointers.values()];
-        dragging = true;
-        panStart = { x: only.x, y: only.y, panX, panY };
-      }
-    }
-    imgEl.addEventListener("pointerup", endPointer);
-    imgEl.addEventListener("pointercancel", endPointer);
+      applyTransform();
+    };
+    imgEl.addEventListener("pointerup", stopDrag);
+    imgEl.addEventListener("pointercancel", stopDrag);
 
     imgEl.addEventListener("dblclick", (e) => {
       e.preventDefault();
