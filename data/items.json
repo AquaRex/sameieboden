@@ -1,6 +1,7 @@
 [
   {
     "id": "seed-1",
+    "slug": "rive",
     "name": "Rive",
     "description": "Rive med rødt metallhode og treskaft.",
     "tags": [
@@ -13,6 +14,7 @@
   },
   {
     "id": "seed-2",
+    "slug": "plantespade",
     "name": "Plantespade",
     "description": "Fiskars Solid plantespade med målestokk.",
     "tags": [
@@ -25,6 +27,7 @@
   },
   {
     "id": "seed-3",
+    "slug": "beskjaeringssaks",
     "name": "Beskjæringssaks",
     "description": "Fiskars SingleStep bypass-saks (Ø 20 mm).",
     "tags": [
@@ -37,6 +40,7 @@
   },
   {
     "id": "seed-4",
+    "slug": "ugressfjerner",
     "name": "Ugressfjerner",
     "description": "Fiskars Xact ugressfjerner med teleskopskaft.",
     "tags": [
@@ -49,6 +53,7 @@
   },
   {
     "id": "seed-5",
+    "slug": "hekksaks",
     "name": "Hekksaks",
     "description": "Fiskars HSM92 hekksaks med girutveksling.",
     "tags": [
@@ -61,6 +66,7 @@
   },
   {
     "id": "seed-6",
+    "slug": "kultivator",
     "name": "Kultivator",
     "description": "Fiskars Solid kultivator/blomsterrive.",
     "tags": [
@@ -73,6 +79,7 @@
   },
   {
     "id": "seed-7",
+    "slug": "spisspade",
     "name": "Spisspade",
     "description": "Fiskars metall spisspade med D-håndtak.",
     "tags": [

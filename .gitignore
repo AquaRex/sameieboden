@@ -6,3 +6,6 @@
 # Python
 __pycache__/
 *.pyc
+
+# Local-only admin/editor tools (kept outside the public repo)
+sameiebodenlocal/
