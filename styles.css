@@ -1384,8 +1384,9 @@ body.id-open { overflow: hidden; }
 }
 
 @media (max-width: 700px) {
-  .id-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
-  .id-image-wrap { aspect-ratio: 4 / 3; }
+  .id-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; padding-top: 3.5rem; }
+  .id-close { width: 44px; height: 44px; top: 0.6rem; right: 0.6rem; font-size: 1.5rem; }
+  .id-image-wrap { aspect-ratio: 1 / 1; }
   .id-title { font-size: 1.25rem; }
   .id-house-grid { grid-template-columns: repeat(3, 1fr); }
   .id-date-row { grid-template-columns: 1fr; }
