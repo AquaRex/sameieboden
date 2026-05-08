@@ -615,6 +615,8 @@ body.lb-open { overflow: hidden; }
   object-fit: contain;
   transform-origin: center center;
   -webkit-user-drag: none;
+  user-select: none;
+  touch-action: none;
   display: block;
   border-radius: 6px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
