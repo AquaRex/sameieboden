@@ -2,6 +2,7 @@
 // matching the AC theme. Single shared instance; returns a Promise<boolean>.
 
 import { el } from "../dom.js?v=3";
+import { createButton } from "./button.js?v=1";
 
 let instance = null;
 
@@ -10,8 +11,10 @@ function ensureInstance() {
 
   const titleEl = el("h2", { class: "id-title cf-title" });
   const messageEl = el("p", { class: "cf-message" });
-  const cancelBtn = el("button", { type: "button", class: "btn", textContent: "Avbryt" });
-  const confirmBtn = el("button", { type: "button", class: "btn btn-primary", textContent: "OK" });
+  const cancel = createButton({ label: "Avbryt", variant: "cancel" });
+  const confirm = createButton({ label: "OK", variant: "confirm" });
+  const cancelBtn = cancel.root;
+  const confirmBtn = confirm.root;
   const actions = el("div", { class: "id-picker-actions cf-actions" }, [cancelBtn, confirmBtn]);
 
   const dialog = el("div", { class: "id-dialog cf-dialog", role: "alertdialog", "aria-modal": "true" }, [
@@ -42,8 +45,8 @@ function ensureInstance() {
       titleEl.textContent = title || "Er du sikker?";
       messageEl.textContent = message || "";
       messageEl.hidden = !message;
-      cancelBtn.textContent = cancelLabel;
-      confirmBtn.textContent = confirmLabel;
+      cancel.setLabel(cancelLabel);
+      confirm.setLabel(confirmLabel);
       confirmBtn.classList.toggle("btn-danger", !!danger);
       confirmBtn.classList.toggle("btn-primary", !danger);
       return new Promise((resolve) => {

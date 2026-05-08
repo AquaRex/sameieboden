@@ -1,6 +1,7 @@
 // Modal editor for adding or editing an equipment entry.
 
 import { el, clear } from "../dom.js?v=3";
+import { createButton } from "./button.js?v=1";
 
 const MAX_IMAGE_BYTES = 600 * 1024;
 const FULL_MAX_DIM = 1600;
@@ -77,8 +78,8 @@ export function createEditor({ onSave, getKnownTags }) {
       ]),
       errorBox,
       el("div", { class: "modal-actions" }, [
-        el("button", { type: "button", class: "btn btn-ghost", textContent: "Avbryt", onclick: close }),
-        el("button", { type: "submit", class: "btn btn-primary", textContent: "Lagre" }),
+        createButton({ label: "Avbryt", variant: "cancel", onClick: close }).root,
+        createButton({ label: "Lagre", variant: "confirm", type: "submit" }).root,
       ]),
     ]
   );
@@ -344,28 +345,28 @@ export function createEditor({ onSave, getKnownTags }) {
       textContent: "Dra bildet for å justere, og bruk glidebryteren eller scroll for å zoome.",
     });
 
-    const removeBtn = el("button", {
-      type: "button",
-      class: "btn btn-ghost btn-small",
-      textContent: "Fjern bilde",
-      onclick: () => {
+    const removeBtn = createButton({
+      label: "Fjern bilde",
+      variant: "cancel",
+      size: "small",
+      onClick: () => {
         imageDataUrl = "";
         imageThumbDataUrl = "";
         imagePos = "50% 50%";
         imageZoom = 1;
         refreshDropZone();
       },
-    });
+    }).root;
 
-    const resetBtn = el("button", {
-      type: "button",
-      class: "btn btn-ghost btn-small",
-      textContent: "Tilbakestill",
-      onclick: () => {
+    const resetBtn = createButton({
+      label: "Tilbakestill",
+      variant: "cancel",
+      size: "small",
+      onClick: () => {
         tx = 0; ty = 0;
         setZoom(1);
       },
-    });
+    }).root;
 
     focalPanel.appendChild(el("p", { class: "ed-focal-label", textContent: "Posisjonering i kort" }));
     focalPanel.appendChild(frame);

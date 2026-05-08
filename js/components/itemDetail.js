@@ -7,9 +7,10 @@ import { getCurrentHouse, subscribeCurrentHouse } from "../currentHouse.js?v=1";
 import {
   getState, getUpcoming, subscribeState, getHistory, getRecentHistory,
   useItem, reserveBlocks, endActive, cancelReservation,
-} from "../state.js?v=9";
+} from "../state.js?v=10";
 import { createDayPicker } from "./dayPicker.js?v=1";
 import { confirmDialog } from "./confirmDialog.js?v=1";
+import { createButton } from "./button.js?v=1";
 import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../util/dates.js?v=1";
 import { friendlyError } from "../util/errors.js?v=1";
 
@@ -158,25 +159,25 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
     clear(actionsBar);
     const me = getCurrentHouse();
     if (!me) {
-      actionsBar.append(button("Velg husnummer", "btn btn-primary", () => onChangeHouse && onChangeHouse()));
+      actionsBar.append(button("Velg husnummer", "confirm", () => onChangeHouse && onChangeHouse()));
       return;
     }
     if (st.status === "in_use") {
-      if (st.holder === me) actionsBar.append(button("Lever tilbake", "btn btn-primary", returnNow));
-      actionsBar.append(button("Reserver", "btn", openPicker));
+      if (st.holder === me) actionsBar.append(button("Lever tilbake", "confirm", returnNow));
+      actionsBar.append(button("Reserver", "default", openPicker));
     } else if (st.status === "reserved") {
-      if (st.holder === me) actionsBar.append(button("Bruk nå", "btn btn-primary", useNow));
-      actionsBar.append(button("Reserver", "btn", openPicker));
+      if (st.holder === me) actionsBar.append(button("Bruk nå", "confirm", useNow));
+      actionsBar.append(button("Reserver", "default", openPicker));
     } else {
       actionsBar.append(
-        button("Bruk nå", "btn btn-primary", useNow),
-        button("Reserver", "btn", openPicker),
+        button("Bruk nå", "confirm", useNow),
+        button("Reserver", "default", openPicker),
       );
     }
   }
 
-  function button(text, cls, onclick) {
-    return el("button", { type: "button", class: cls, textContent: text, onclick });
+  function button(text, variant, onclick) {
+    return createButton({ label: text, variant, onClick: onclick }).root;
   }
 
   // ---- Action handlers ---------------------------------------------------

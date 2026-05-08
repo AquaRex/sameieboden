@@ -149,6 +149,24 @@ export async function getCalendarWindow(slug, { daysBack = 14, daysAhead = 14 } 
   return { past, upcoming: futureBounded };
 }
 
+// All reservations across every slug whose period overlaps a window of
+// [today - daysBack, today + daysAhead] inclusive. Used by the global
+// calendar view that shows events for all items at once.
+export async function getAllCalendar({ daysBack = 14, daysAhead = 14 } = {}) {
+  const dayMs = 24 * 3600 * 1000;
+  const fromIso = new Date(Date.now() - daysBack * dayMs).toISOString();
+  const toIso = new Date(Date.now() + (daysAhead + 1) * dayMs).toISOString();
+  // overlap test: period_from <= window_end AND (period_to is null OR period_to >= window_start)
+  const { data, error } = await supabase
+    .from("reservations")
+    .select("*")
+    .lte("period_from", toIso)
+    .or(`period_to.is.null,period_to.gte.${fromIso}`)
+    .order("period_from", { ascending: true });
+  if (error) { console.warn("getAllCalendar", error); return []; }
+  return data || [];
+}
+
 export async function loadAllState() {
   // Pull only current + future rows. History is fetched on demand.
   const nowISO = new Date().toISOString();

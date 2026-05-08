@@ -18,6 +18,7 @@
 import { el, clear } from "../dom.js?v=3";
 import { toast } from "../toast.js?v=1";
 import { DAY_MS, startOfDayMs, labelForDay, daysToBlocks } from "../util/dates.js?v=1";
+import { createButton } from "./button.js?v=1";
 
 const WEEK_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 
@@ -32,18 +33,16 @@ export function createDayPicker({
 
   const grid = el("div", { class: "id-day-picker" });
   const summary = el("p", { class: "id-day-summary" });
-  const cancelBtn = el("button", {
-    type: "button",
-    class: "btn btn-ghost",
-    textContent: "Avbryt",
-    onclick: () => { onCancel && onCancel(); },
-  });
-  const confirmBtn = el("button", {
-    type: "button",
-    class: "btn btn-primary",
-    textContent: "Reserver",
-    onclick: handleConfirm,
-  });
+  const cancelBtn = createButton({
+    label: "Avbryt",
+    variant: "cancel",
+    onClick: () => { onCancel && onCancel(); },
+  }).root;
+  const confirmBtn = createButton({
+    label: "Reserver",
+    variant: "confirm",
+    onClick: handleConfirm,
+  }).root;
   const actions = el("div", { class: "id-picker-actions" }, [cancelBtn, confirmBtn]);
   const root = el("div", { class: "id-day-picker-root" }, [grid, summary, actions]);
 

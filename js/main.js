@@ -1,4 +1,4 @@
-import { isLocal } from "./env.js?v=3";
+import { isLocal } from "./env.js?v=4";
 import { store } from "./store.js?v=3";
 import { filterItems } from "./search.js?v=3";
 import { createSearchBar } from "./components/searchBar.js?v=3";
@@ -11,11 +11,13 @@ import { createLightbox } from "./components/lightbox.js?v=3";
 import { createItemDetail } from "./components/itemDetail.js?v=22";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
+import { createCalendarView } from "./components/calendarView.js?v=1";
+import { createButton } from "./components/button.js?v=1";
 import { createInstallButton } from "./components/installButton.js?v=2";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=9";
+import { loadAllState, startRealtime, subscribeState } from "./state.js?v=10";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -33,6 +35,17 @@ const housePicker = createHousePicker();
 const houseBadge = createHouseBadge({
   onClick: () => housePicker.open({ dismissable: true }),
 });
+
+// Calendar feature is localhost-only for now (work in progress).
+const calendarView = editable ? createCalendarView({ getItems: () => store.getAll() }) : null;
+const calendarButton = editable ? createButton({
+  label: "Kalender",
+  icon: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path d="M9 3 v4 M23 3 v4 M5 11 h22 M6 7 h20 a2 2 0 0 1 2 2 v18 a2 2 0 0 1 -2 2 H6 a2 2 0 0 1 -2 -2 V9 a2 2 0 0 1 2 -2 z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  variant: "default",
+  onClick: () => calendarView.open(),
+  title: "Vis kalender",
+  ariaLabel: "Vis kalender",
+}) : null;
 
 const tagFilters = createTagFilters({
   onChange: (t) => { currentTag = t; rerender(); },
@@ -115,7 +128,9 @@ countRow.append(grid.count, viewToggle.root);
 
 const searchRow = document.createElement("div");
 searchRow.className = "search-row";
-searchRow.append(searchBar.root, houseBadge.root);
+searchRow.append(searchBar.root);
+if (calendarButton) searchRow.append(calendarButton.root);
+searchRow.append(houseBadge.root);
 const installButton = createInstallButton();
 if (installButton) {
   const mount = document.getElementById("install-mount");

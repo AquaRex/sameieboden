@@ -1,12 +1,13 @@
 // Admin page entry. Localhost-only: redirects elsewhere if not local.
 
-import { isLocal } from "./env.js?v=3";
+import { isLocal } from "./env.js?v=4";
 import { el, clear } from "./dom.js?v=3";
 import { HOUSES } from "./supabaseConfig.js?v=4";
 import { loadItems } from "./serverApi.js?v=3";
-import { getAllHistory, cancelReservation } from "./state.js?v=9";
+import { getAllHistory, cancelReservation } from "./state.js?v=10";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { createDropdown } from "./components/dropdown.js?v=1";
+import { createButton } from "./components/button.js?v=1";
 import { toast } from "./toast.js?v=1";
 import { formatBlock, formatWhen } from "./util/dates.js?v=1";
 import { friendlyError } from "./util/errors.js?v=1";
@@ -43,7 +44,7 @@ const limitDropdown = createDropdown({
   onChange: (v) => { filters.limit = parseInt(v, 10) || 500; refresh(); },
 });
 
-const reloadBtn = el("button", { type: "button", class: "btn btn-small", textContent: "Oppdater", onclick: refresh });
+const reloadBtn = createButton({ label: "Oppdater", variant: "default", size: "small", onClick: refresh }).root;
 
 const filterBar = el("div", { class: "admin-filters" }, [
   field("Hus", houseDropdown.root),
