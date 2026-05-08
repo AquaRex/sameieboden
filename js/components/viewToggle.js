@@ -22,8 +22,16 @@ export function createViewToggle({ onChange }) {
     <rect x="4" y="8" width="2" height="2"/>
     <rect x="8" y="8" width="2" height="2"/>
   </svg>`;
+  const listIcon = `<svg viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" focusable="false">
+    <rect x="0" y="0" width="2" height="2"/>
+    <rect x="3" y="0.5" width="7" height="1"/>
+    <rect x="0" y="4" width="2" height="2"/>
+    <rect x="3" y="4.5" width="7" height="1"/>
+    <rect x="0" y="8" width="2" height="2"/>
+    <rect x="3" y="8.5" width="7" height="1"/>
+  </svg>`;
   const gridBtn = makeBtn("grid", "Rutenett", gridIcon);
-  const listBtn = makeBtn("list", "Liste", "☰");
+  const listBtn = makeBtn("list", "Liste", listIcon);
 
   const root = el(
     "div",

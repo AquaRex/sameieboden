@@ -34,9 +34,86 @@ export function createLightbox() {
 
   const stage = el("div", { class: "lb-stage" }, [imgEl]);
 
-  // Clicks anywhere outside the image and the controls dismiss the
-  // lightbox; the image itself swallows clicks so the cursor can move
-  // over it without closing.
+  let zoom = 1;
+  let panX = 0;
+  let panY = 0;
+  const MIN_ZOOM = 1;
+  const MAX_ZOOM = 6;
+
+  function applyTransform() {
+    imgEl.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
+    imgEl.style.cursor = zoom > 1 ? (dragging ? "grabbing" : "grab") : "";
+  }
+
+  function resetZoom() {
+    zoom = 1;
+    panX = 0;
+    panY = 0;
+    applyTransform();
+  }
+
+  function setZoom(next, anchor) {
+    const z = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, next));
+    if (anchor && z !== zoom) {
+      const rect = imgEl.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const ax = anchor.x - cx;
+      const ay = anchor.y - cy;
+      const ratio = z / zoom;
+      panX = ax - (ax - panX) * ratio;
+      panY = ay - (ay - panY) * ratio;
+    }
+    zoom = z;
+    if (zoom === 1) { panX = 0; panY = 0; }
+    applyTransform();
+  }
+
+  stage.addEventListener("wheel", (e) => {
+    if (backdrop.hidden) return;
+    e.preventDefault();
+    const factor = Math.exp(-e.deltaY * 0.0015);
+    setZoom(zoom * factor, { x: e.clientX, y: e.clientY });
+  }, { passive: false });
+
+  let dragging = false;
+  let startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+  imgEl.addEventListener("pointerdown", (e) => {
+    if (zoom <= 1) return;
+    e.preventDefault();
+    e.stopPropagation();
+    dragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startPanX = panX;
+    startPanY = panY;
+    imgEl.setPointerCapture(e.pointerId);
+    applyTransform();
+  });
+  imgEl.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    panX = startPanX + (e.clientX - startX);
+    panY = startPanY + (e.clientY - startY);
+    applyTransform();
+  });
+  const stopDrag = (e) => {
+    if (!dragging) return;
+    dragging = false;
+    try { imgEl.releasePointerCapture(e.pointerId); } catch {}
+    applyTransform();
+  };
+  imgEl.addEventListener("pointerup", stopDrag);
+  imgEl.addEventListener("pointercancel", stopDrag);
+
+  // Double-click toggles between fit and 2x.
+  imgEl.addEventListener("dblclick", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (zoom > 1) resetZoom();
+    else setZoom(2, { x: e.clientX, y: e.clientY });
+  });
+
+  // Clicks on the image only dismiss when not zoomed; otherwise they pan.
   imgEl.addEventListener("click", (e) => e.stopPropagation());
 
   const backdrop = el(
@@ -74,10 +151,12 @@ export function createLightbox() {
     backdrop.hidden = true;
     document.body.classList.remove("lb-open");
     imgEl.removeAttribute("src");
+    resetZoom();
   }
 
   function show(next) {
     if (items.length === 0) return;
+    resetZoom();
     index = ((next % items.length) + items.length) % items.length;
     const item = items[index];
     imgEl.src = item.image;
