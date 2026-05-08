@@ -1894,19 +1894,32 @@ body.id-open { overflow: hidden; }
   text-overflow: ellipsis;
   font-weight: 600;
 }
-.cal-event--past { opacity: 0.7; }
-.cal-event--today {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--accent-ink);
+.cal-event--past,
+.cal-event--return { opacity: 0.85; background: var(--bg); border-color: var(--bg-deep); color: var(--ink-soft); }
+.cal-event--today,
+.cal-event--active {
+  background: #eaf2e7;
+  border-color: #b9d3b1;
+  color: #355a2c;
 }
-.cal-event--today .cal-event-house { background: var(--accent); border-color: var(--accent-deep); color: #fff; }
+.cal-event--today .cal-event-house,
+.cal-event--active .cal-event-house { background: #b9d3b1; border-color: #91b88c; color: #233e1d; }
 .cal-event--future {
   background: #eef3fb;
   border-color: #cdd9ec;
   color: #2d4a78;
 }
 .cal-event--future .cal-event-house { background: #fff; border-color: #cdd9ec; color: #2d4a78; }
+.cal-event--custom {
+  background: #fff4d1;
+  border-color: #FFB400;
+  color: #6b4a00;
+}
+.cal-event--custom .cal-event-house {
+  background: #FFB400;
+  border-color: #c98c00;
+  color: #fff;
+}
 .cal-event--more {
   justify-content: center;
   background: transparent;
@@ -1932,8 +1945,19 @@ body.id-open { overflow: hidden; }
   border: 2px solid var(--bg-deep);
   border-radius: 12px;
 }
-.cal-detail-row--today { background: var(--accent-soft); border-color: var(--accent); }
+.cal-detail-row--today,
+.cal-detail-row--active { background: #eaf2e7; border-color: #b9d3b1; }
 .cal-detail-row--future { background: #eef3fb; border-color: #cdd9ec; }
+.cal-detail-row--return { background: var(--bg); border-color: var(--bg-deep); }
+.cal-detail-row--event {
+  background: #fff4d1;
+  border-color: #FFB400;
+}
+.cal-detail-row--event .cal-detail-house {
+  background: #FFB400;
+  border-color: #c98c00;
+  color: #fff;
+}
 .cal-detail-house {
   flex: 0 0 auto;
   font-weight: 800;
@@ -1945,9 +1969,51 @@ body.id-open { overflow: hidden; }
   min-width: 2.6rem;
   text-align: center;
 }
-.cal-detail-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.cal-detail-text { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1 1 auto; }
 .cal-detail-name { font-weight: 700; }
 .cal-detail-period { font-size: 0.8rem; color: var(--muted); }
+.cal-detail-desc { font-size: 0.85rem; color: var(--ink-soft); white-space: pre-wrap; }
+.cal-detail-actions { display: flex; flex-direction: column; gap: 0.3rem; flex: 0 0 auto; }
+.cal-detail-add { margin-top: 1rem; display: flex; justify-content: center; }
+.cal-detail-add-btn {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 2px solid var(--bg-deep);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: transform 0.08s var(--easing);
+}
+.cal-detail-add-btn:hover { background: var(--bg); }
+.cal-detail-add-btn:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--bg-deeper); }
+.cal-detail-add-btn:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-btn), 0 0 0 3px rgba(127, 184, 134, 0.35);
+}
+
+/* Event create/edit form */
+.cal-form-dialog {
+  max-width: 460px;
+  padding: 1.4rem 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.cal-form-title { margin: 0; text-align: center; }
+.cal-form-date { margin: 0 0 0.4rem; text-align: center; color: var(--muted); font-weight: 600; }
+.cal-form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
 
 @media (max-width: 720px) {
   .cal-dialog { padding: 1rem 0.6rem 1.2rem; width: 98vw; max-width: 98vw; }
@@ -1982,19 +2048,161 @@ body.id-open { overflow: hidden; }
     border: 1px solid var(--bg-deep);
     letter-spacing: 0;
   }
-  .cal-event--today .cal-event-house {
-    background: var(--accent);
-    border-color: var(--accent-deep);
-    color: #fff;
+  .cal-event--today .cal-event-house,
+  .cal-event--active .cal-event-house {
+    background: #b9d3b1;
+    border-color: #91b88c;
+    color: #233e1d;
   }
   .cal-event--future .cal-event-house {
     background: #eef3fb;
     border-color: #cdd9ec;
     color: #2d4a78;
   }
+  .cal-event--return .cal-event-house {
+    background: var(--bg);
+    border-color: var(--bg-deep);
+    color: var(--ink-soft);
+  }
+  .cal-event--custom .cal-event-house {
+    background: #FFB400;
+    border-color: #c98c00;
+    color: #fff;
+  }
   .cal-event--more {
     font-size: 0.55rem;
     color: var(--muted);
     border: none;
   }
+}
+
+/* ==================== Time picker ==================== */
+.tp-root {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem 0.9rem 0.55rem;
+  background: linear-gradient(180deg, #fff 0%, var(--surface) 100%);
+  border: 2px solid var(--bg-deeper);
+  border-radius: 18px;
+  box-shadow: 0 3px 0 var(--bg-deeper);
+  box-sizing: border-box;
+}
+.tp-tile {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  justify-items: stretch;
+  gap: 0.18rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+.tp-chev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.35rem;
+  padding: 0;
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  border: 2px solid var(--accent-deep);
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: 0 2px 0 var(--accent-deep);
+  transition: transform 0.05s ease, background 0.1s ease;
+}
+.tp-chev svg { width: 0.95rem; height: 0.95rem; }
+.tp-chev:hover { background: var(--accent); color: #fff; }
+.tp-chev:active {
+  transform: translateY(2px);
+  box-shadow: 0 0 0 var(--accent-deep);
+}
+.tp-chev:focus-visible {
+  outline: none;
+  box-shadow: 0 2px 0 var(--accent-deep), 0 0 0 3px rgba(217, 169, 0, 0.45);
+}
+.tp-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.4rem;
+  padding: 0;
+  background: #fff;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 12px;
+  cursor: ns-resize;
+  user-select: none;
+  outline: none;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.04);
+}
+.tp-display:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(217, 169, 0, 0.35), inset 0 -2px 0 rgba(0, 0, 0, 0.04);
+}
+.tp-num {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.5rem;
+  line-height: 1;
+  font-weight: 800;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.tp-cap {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 0.05rem;
+}
+.tp-sep {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--accent-deep);
+  /* Vertically center on the number row (row 2 of the tile grid). */
+  align-self: center;
+  /* Lift to compensate for the caption row below */
+  margin-bottom: 1.1rem;
+}
+.tp-root.is-disabled { opacity: 0.55; pointer-events: none; }
+
+/* Time-range row in event form */
+.cal-form-time-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cal-form-time-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+.cal-form-time-toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent-deep); }
+.cal-form-time-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  align-items: end;
+}
+.cal-form-time-col { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.cal-form-time-col > span {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 480px) {
+  .tp-root { padding: 0.5rem 0.6rem 0.45rem; gap: 0.35rem; }
+  .tp-num { font-size: 1.3rem; }
+  .tp-sep { font-size: 1.4rem; margin-bottom: 1rem; }
+  .tp-chev { height: 1.2rem; }
+  .tp-display { height: 2.1rem; }
+  .cal-form-time-pickers { gap: 0.5rem; }
 }

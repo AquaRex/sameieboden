@@ -7,7 +7,7 @@ import { getCurrentHouse, subscribeCurrentHouse } from "../currentHouse.js?v=1";
 import {
   getState, getUpcoming, subscribeState, getHistory, getRecentHistory,
   useItem, reserveBlocks, endActive, cancelReservation,
-} from "../state.js?v=10";
+} from "../state.js?v=12";
 import { createDayPicker } from "./dayPicker.js?v=1";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { createButton } from "./button.js?v=1";

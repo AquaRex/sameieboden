@@ -167,6 +167,73 @@ export async function getAllCalendar({ daysBack = 14, daysAhead = 14 } = {}) {
   return data || [];
 }
 
+// ---- User-created calendar events --------------------------------------
+// Stored in `events` table:
+//   { id, house, title, description, event_date (date), created_at }
+// Anyone can read; anyone can insert; only the row's house can edit/delete
+// (enforced client-side here, since RLS is disabled for this project).
+
+function dateOnlyIso(ts) {
+  const d = new Date(ts);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+export async function getEventsInWindow({ daysBack = 14, daysAhead = 14 } = {}) {
+  const dayMs = 24 * 3600 * 1000;
+  const fromDate = dateOnlyIso(Date.now() - daysBack * dayMs);
+  const toDate = dateOnlyIso(Date.now() + daysAhead * dayMs);
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .gte("event_date", fromDate)
+    .lte("event_date", toDate)
+    .order("event_date", { ascending: true });
+  if (error) { console.warn("getEventsInWindow", error); return []; }
+  return data || [];
+}
+
+export async function createEvent({ house, title, description, event_date, time_from, time_to }) {
+  const row = {
+    house,
+    title: String(title || "").trim(),
+    description: (description == null ? null : String(description).trim()) || null,
+    event_date,
+    time_from: time_from || null,
+    time_to: time_to || null,
+  };
+  const { data, error } = await supabase.from("events").insert(row).select().single();
+  if (error) throw error;
+  notify();
+  return data;
+}
+
+export async function updateEvent(id, { title, description, event_date, time_from, time_to }) {
+  const patch = {};
+  if (title != null) patch.title = String(title).trim();
+  if (description !== undefined) patch.description = description ? String(description).trim() : null;
+  if (event_date != null) patch.event_date = event_date;
+  if (time_from !== undefined) patch.time_from = time_from || null;
+  if (time_to !== undefined) patch.time_to = time_to || null;
+  const { data, error } = await supabase
+    .from("events")
+    .update(patch)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) throw error;
+  notify();
+  return data;
+}
+
+export async function deleteEvent(id) {
+  const { error } = await supabase.from("events").delete().eq("id", id);
+  if (error) throw error;
+  notify();
+}
+
 export async function loadAllState() {
   // Pull only current + future rows. History is fetched on demand.
   const nowISO = new Date().toISOString();
@@ -210,6 +277,16 @@ export function startRealtime() {
         }
         notify();
       }
+    )
+    .subscribe();
+
+  // Events table: any change just kicks listeners so the calendar reloads.
+  supabase
+    .channel("events-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "events" },
+      () => notify(),
     )
     .subscribe();
 
