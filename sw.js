@@ -1,9 +1,9 @@
-/* Sameie Boden — service worker
+/* Sameieboden — service worker
  * Network-first for HTML/JSON so updates land immediately.
  * Cache-first for static assets (CSS, JS, images, icons).
  * Bump CACHE_VERSION when you ship a major change to force eviction.
  */
-const CACHE_VERSION = "v52";
+const CACHE_VERSION = "v53";
 const STATIC_CACHE = `sb-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `sb-runtime-${CACHE_VERSION}`;
 
