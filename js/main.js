@@ -92,8 +92,6 @@ if (editable) {
   document.body.classList.add("is-editable");
   const toolbar = createToolbar({
     onAdd: () => editor.open(null),
-    onExport: exportJson,
-    onImport: importJson,
     onReset: () => {
       if (confirm("Tilbakestill listen til standardverdier? Dette sletter dine endringer.")) {
         store.resetToDefaults();
@@ -134,28 +132,4 @@ function rerender(items = store.getAll()) {
   const filtered = filterItems(items, { query: currentQuery, tag: currentTag });
   lastFiltered = filtered;
   grid.render(filtered, items.length);
-}
-
-function exportJson() {
-  const data = JSON.stringify(store.getAll(), null, 2);
-  const blob = new Blob([data], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "utstyr.json";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-async function importJson(file) {
-  try {
-    const text = await file.text();
-    const parsed = JSON.parse(text);
-    if (!Array.isArray(parsed)) throw new Error("Forventet en liste i JSON-filen.");
-    store.replaceAll(parsed);
-  } catch (err) {
-    alert("Kunne ikke importere: " + err.message);
-  }
 }
