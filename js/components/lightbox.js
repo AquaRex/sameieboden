@@ -84,7 +84,16 @@ export function createLightbox() {
       if (backdrop.hidden) return;
       e.preventDefault();
       const factor = Math.exp(-e.deltaY * 0.0015);
-      setZoom(zoom * factor, { x: e.clientX, y: e.clientY });
+      // If the cursor is outside the image, zoom toward the image center
+      // instead — otherwise the image flies away from the pointer.
+      const rect = imgEl.getBoundingClientRect();
+      const inside =
+        e.clientX >= rect.left && e.clientX <= rect.right &&
+        e.clientY >= rect.top  && e.clientY <= rect.bottom;
+      const anchor = inside
+        ? { x: e.clientX, y: e.clientY }
+        : { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+      setZoom(zoom * factor, anchor);
     }, { passive: false });
 
     // Multi-pointer state for touch pinch-zoom.
