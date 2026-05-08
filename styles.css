@@ -1486,6 +1486,37 @@ body.id-open { overflow: hidden; }
 }
 .search-row .search { flex: 1 1 auto; }
 
+/* Overflow ⋯ menu (mobile collapse target for calendar + house badge) */
+.overflow-menu { position: relative; display: none; }
+.overflow-trigger {
+  padding: 0.6rem 0.7rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.overflow-trigger svg { width: 22px; height: 22px; display: block; }
+.overflow-panel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  right: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.6rem;
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  min-width: 180px;
+}
+.overflow-panel[hidden] { display: none; }
+.overflow-panel .btn,
+.overflow-panel .house-badge {
+  width: 100%;
+  justify-content: flex-start;
+}
+
 .house-badge {
   flex: 0 0 auto;
   display: inline-flex;
@@ -1599,9 +1630,8 @@ body.id-open { overflow: hidden; }
 .id-picker-actions .btn { flex: 1 1 0; }
 
 @media (max-width: 600px) {
-  .search-row { flex-wrap: wrap; }
-  .search-row .btn { width: 100%; justify-content: center; }
-  .house-badge { width: 100%; justify-content: center; }
+  .search-row { flex-wrap: nowrap; }
+  .overflow-menu { display: inline-flex; }
   .hp-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
