@@ -2,7 +2,7 @@
 // user clicks the badge to switch.
 
 import { el, clear } from "../dom.js?v=3";
-import { HOUSES } from "../supabaseConfig.js?v=4";
+import { HOUSES } from "../supabaseConfig.js?v=5";
 import { getCurrentHouse, setCurrentHouse } from "../currentHouse.js?v=1";
 
 export function createHousePicker() {
