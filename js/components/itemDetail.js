@@ -42,9 +42,6 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
   const statusRow   = el("div", { class: "id-status-row" }, [statusBadge, statusText]);
   const statusDetail = el("p", { class: "id-status-detail" });
 
-  const upcomingTitle = el("h3", { class: "id-section-title", textContent: "Kommende reservasjoner" });
-  const upcomingList = el("ul", { class: "id-upcoming" });
-
   // Public single-line "last used" — visible to everyone, but only when there
   // is a past reservation within the last 14 days.
   const lastUsedEl = el("p", { class: "id-last-used", hidden: true });
@@ -77,7 +74,6 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
         titleEl, descEl, tagsEl,
         statusRow, statusDetail,
         lastUsedEl,
-        upcomingTitle, upcomingList,
         historyTitle, historyList,
         actionsBar, pickerWrap,
       ]),
@@ -120,39 +116,8 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
       statusDetail.hidden = false;
     }
 
-    renderUpcoming(st);
     renderActions(st);
     if (!pickerWrap.hidden) dayPicker.refresh();
-  }
-
-  function renderUpcoming(st) {
-    clear(upcomingList);
-    const future = getUpcoming(currentItem.slug).filter((r) => r.id !== st.activeId);
-    if (future.length === 0) {
-      upcomingTitle.hidden = true;
-      upcomingList.hidden = true;
-      return;
-    }
-    upcomingTitle.hidden = false;
-    upcomingList.hidden = false;
-    const me = getCurrentHouse();
-    for (const row of future) {
-      const isMine = row.house === me;
-      upcomingList.appendChild(
-        el("li", { class: "id-upcoming-item" }, [
-          el("span", { class: "id-upcoming-when", textContent: formatBlock(row.period_from, row.period_to) }),
-          el("span", { class: "id-upcoming-who", textContent: row.house || "?" }),
-          isMine ? el("button", {
-            type: "button",
-            class: "id-upcoming-cancel",
-            title: "Avbryt reservasjon",
-            "aria-label": "Avbryt reservasjon",
-            textContent: "×",
-            onclick: () => onCancelFuture(row),
-          }) : null,
-        ])
-      );
-    }
   }
 
   function renderActions(st) {
@@ -193,21 +158,6 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
       const ok = await endActive(currentItem.slug);
       if (!ok) toast("Ingen aktiv bruk å avslutte.", { kind: "error" });
       await refreshHistory();
-    } catch (err) { handleErr(err); }
-  }
-
-  async function onCancelFuture(row) {
-    const ok = await confirmDialog({
-      title: "Avbryt reservasjon?",
-      message: `Reservasjonen til ${row.house} (${formatBlock(row.period_from, row.period_to)}) blir slettet.`,
-      confirmLabel: "Avbryt reservasjon",
-      cancelLabel: "Behold",
-      danger: true,
-    });
-    if (!ok) return;
-    try {
-      await cancelReservation(row.id);
-      toast("Reservasjonen er avbrutt.", { kind: "success" });
     } catch (err) { handleErr(err); }
   }
 
