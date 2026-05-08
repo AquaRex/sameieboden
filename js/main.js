@@ -38,7 +38,7 @@ const houseBadge = createHouseBadge({
 const calendarView = createCalendarView({ getItems: () => store.getAll() });
 const calendarButton = createButton({
   label: "Kalender",
-  icon: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path d="M9 3 v4 M23 3 v4 M5 11 h22 M6 7 h20 a2 2 0 0 1 2 2 v18 a2 2 0 0 1 -2 2 H6 a2 2 0 0 1 -2 -2 V9 a2 2 0 0 1 2 -2 z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  icon: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="currentColor" d="M6 5 h3 V3 a1.5 1.5 0 0 1 3 0 v2 h8 V3 a1.5 1.5 0 0 1 3 0 v2 h3 a2 2 0 0 1 2 2 v4 H4 V7 a2 2 0 0 1 2 -2 z M4 13 h24 v14 a2 2 0 0 1 -2 2 H6 a2 2 0 0 1 -2 -2 z"/></svg>`,
   variant: "default",
   onClick: () => calendarView.open(),
   title: "Vis kalender",
