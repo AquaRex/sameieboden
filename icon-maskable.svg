@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Maskable: art kept inside the safe zone (centered 80% circle).
+       Background fills full bleed for adaptive icon masks. -->
+  <rect width="512" height="512" fill="#7fb886"/>
+  <g transform="translate(256 256)">
+    <g fill="#fdfbe5">
+      <path d="M-95 -10 L0 -110 L95 -10 V90 a8 8 0 0 1 -8 8 H-87 a8 8 0 0 1 -8 -8 Z"/>
+    </g>
+  </g>
+</svg>
