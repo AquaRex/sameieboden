@@ -8,9 +8,10 @@ import { createEditor } from "./components/editor.js?v=3";
 import { createToolbar } from "./components/toolbar.js?v=3";
 import { createViewToggle } from "./components/viewToggle.js?v=3";
 import { createLightbox } from "./components/lightbox.js?v=3";
-import { createItemDetail } from "./components/itemDetail.js?v=19";
+import { createItemDetail } from "./components/itemDetail.js?v=20";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
+import { createInstallButton } from "./components/installButton.js?v=1";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
@@ -68,6 +69,7 @@ const itemDetail = createItemDetail({
     lightbox.open(list, Math.max(0, idx));
   },
   onChangeHouse: () => housePicker.open({ dismissable: true }),
+  showHistory: editable,
 });
 let lastFiltered = [];
 
@@ -113,6 +115,8 @@ countRow.append(grid.count, viewToggle.root);
 const searchRow = document.createElement("div");
 searchRow.className = "search-row";
 searchRow.append(searchBar.root, houseBadge.root);
+const installButton = createInstallButton();
+if (installButton) searchRow.append(installButton.root);
 controls.append(searchRow, tagFilters.root, countRow);
 gridSection.append(grid.list, grid.empty);
 

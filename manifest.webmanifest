@@ -1,6 +1,7 @@
 {
   "name": "Sameie Boden",
   "short_name": "Sameie Boden",
+  "id": "/",
   "description": "Felles utstyr og verktøy i Bedehusvegen sameie.",
   "start_url": "./?source=pwa",
   "scope": "./",

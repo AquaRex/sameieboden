@@ -19,7 +19,7 @@ const STATUS_LABEL = {
   reserved:  "Reservert",
 };
 
-export function createItemDetail({ onOpenImage, onChangeHouse } = {}) {
+export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = false } = {}) {
   let currentItem = null;
   let unsubscribeState = null;
   let unsubscribeHouse = null;
@@ -44,8 +44,8 @@ export function createItemDetail({ onOpenImage, onChangeHouse } = {}) {
   const upcomingTitle = el("h3", { class: "id-section-title", textContent: "Kommende reservasjoner" });
   const upcomingList = el("ul", { class: "id-upcoming" });
 
-  const historyTitle = el("h3", { class: "id-section-title", textContent: "Siste lån" });
-  const historyList  = el("ul", { class: "id-history" });
+  const historyTitle = el("h3", { class: "id-section-title", textContent: "Siste lån", hidden: !showHistory });
+  const historyList  = el("ul", { class: "id-history", hidden: !showHistory });
 
   const actionsBar = el("div", { class: "id-actions" });
 
@@ -235,6 +235,7 @@ export function createItemDetail({ onOpenImage, onChangeHouse } = {}) {
 
   async function refreshHistory() {
     if (!currentItem) return;
+    if (!showHistory) return;
     const rows = await getHistory(currentItem.slug, 10);
     clear(historyList);
     if (rows.length === 0) {
@@ -271,7 +272,7 @@ export function createItemDetail({ onOpenImage, onChangeHouse } = {}) {
       imageEl.removeAttribute("src");
       imageWrap.style.cursor = "default";
     }
-    historyList.replaceChildren(el("li", { class: "id-history-empty", textContent: "Laster…" }));
+    historyList.replaceChildren(el("li", { class: "id-history-empty", textContent: "Laster…", hidden: !showHistory }));
     hidePicker();
 
     renderState();
