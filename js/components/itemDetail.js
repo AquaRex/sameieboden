@@ -9,6 +9,7 @@ import {
   useItem, reserveBlocks, endActive, cancelReservation,
 } from "../state.js?v=7";
 import { createDayPicker } from "./dayPicker.js?v=1";
+import { confirmDialog } from "./confirmDialog.js?v=1";
 import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../util/dates.js?v=1";
 import { friendlyError } from "../util/errors.js?v=1";
 
@@ -190,7 +191,14 @@ export function createItemDetail({ onOpenImage, onChangeHouse } = {}) {
   }
 
   async function onCancelFuture(row) {
-    if (!confirm(`Avbryte reservasjonen til ${row.house} (${formatBlock(row.period_from, row.period_to)})?`)) return;
+    const ok = await confirmDialog({
+      title: "Avbryt reservasjon?",
+      message: `Reservasjonen til ${row.house} (${formatBlock(row.period_from, row.period_to)}) blir slettet.`,
+      confirmLabel: "Avbryt reservasjon",
+      cancelLabel: "Behold",
+      danger: true,
+    });
+    if (!ok) return;
     try {
       await cancelReservation(row.id);
       toast("Reservasjonen er avbrutt.", { kind: "success" });

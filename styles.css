@@ -483,6 +483,14 @@ button { font-family: inherit; }
 }
 .btn-primary:hover { background: var(--accent-deep); border-color: var(--accent-deep); }
 .btn-primary:active { box-shadow: 0 1px 0 var(--accent-deep); }
+.btn-danger {
+  background: #d9534f;
+  border-color: #b53d3a;
+  color: #fff;
+  box-shadow: 0 3px 0 #b53d3a;
+}
+.btn-danger:hover { background: #c9433f; border-color: #b53d3a; }
+.btn-danger:active { box-shadow: 0 1px 0 #b53d3a; }
 .btn-ghost { background: transparent; border-color: transparent; box-shadow: none; }
 .btn-ghost:hover { background: var(--bg-deep); border-color: var(--bg-deep); }
 .btn-ghost:active { transform: translateY(0); box-shadow: none; }
@@ -1481,6 +1489,20 @@ body.id-open { overflow: hidden; }
 
 .hp-dialog { padding: 1.5rem 1.25rem !important; max-width: 460px; }
 .hp-title { margin: 0 0 0.25rem; text-align: center; }
+
+.cf-dialog {
+  padding: 1.5rem 1.25rem !important;
+  max-width: 420px;
+}
+.cf-title { margin: 0 0 0.5rem; text-align: center; }
+.cf-message {
+  margin: 0 0 1.1rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.cf-actions { margin-top: 0; }
 .hp-sub {
   margin: 0 0 1rem;
   font-size: 0.88rem;

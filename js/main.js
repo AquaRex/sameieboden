@@ -8,9 +8,10 @@ import { createEditor } from "./components/editor.js?v=3";
 import { createToolbar } from "./components/toolbar.js?v=3";
 import { createViewToggle } from "./components/viewToggle.js?v=3";
 import { createLightbox } from "./components/lightbox.js?v=3";
-import { createItemDetail } from "./components/itemDetail.js?v=18";
+import { createItemDetail } from "./components/itemDetail.js?v=19";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
+import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
 import { loadAllState, startRealtime, subscribeState } from "./state.js?v=7";
@@ -44,8 +45,15 @@ const grid = createGrid({
   editable,
   view: viewToggle.value,
   onEdit: (item) => editor.open(item),
-  onDelete: (item) => {
-    if (confirm(`Slette "${item.name}"?`)) store.remove(item.id);
+  onDelete: async (item) => {
+    const ok = await confirmDialog({
+      title: "Slett gjenstand?",
+      message: `"${item.name}" blir fjernet fra listen.`,
+      confirmLabel: "Slett",
+      cancelLabel: "Avbryt",
+      danger: true,
+    });
+    if (ok) store.remove(item.id);
   },
   onOpen: (item) => {
     itemDetail.open(item);
@@ -112,10 +120,15 @@ if (editable) {
   document.body.classList.add("is-editable");
   const toolbar = createToolbar({
     onAdd: () => editor.open(null),
-    onReset: () => {
-      if (confirm("Tilbakestill listen til standardverdier? Dette sletter dine endringer.")) {
-        store.resetToDefaults();
-      }
+    onReset: async () => {
+      const ok = await confirmDialog({
+        title: "Tilbakestill listen?",
+        message: "Dette sletter dine endringer og henter standardverdier.",
+        confirmLabel: "Tilbakestill",
+        cancelLabel: "Avbryt",
+        danger: true,
+      });
+      if (ok) store.resetToDefaults();
     },
   });
   toolbarMount.appendChild(toolbar.root);
