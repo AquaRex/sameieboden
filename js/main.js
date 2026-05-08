@@ -116,7 +116,10 @@ const searchRow = document.createElement("div");
 searchRow.className = "search-row";
 searchRow.append(searchBar.root, houseBadge.root);
 const installButton = createInstallButton();
-if (installButton) searchRow.append(installButton.root);
+if (installButton) {
+  const mount = document.getElementById("install-mount");
+  if (mount) mount.appendChild(installButton.root);
+}
 controls.append(searchRow, tagFilters.root, countRow);
 gridSection.append(grid.list, grid.empty);
 
