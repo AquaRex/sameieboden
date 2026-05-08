@@ -21,13 +21,14 @@ import {
 } from "../state.js?v=14";
 import { getCurrentHouse } from "../currentHouse.js?v=1";
 import { createButton } from "./button.js?v=1";
-import { createTimePicker } from "./timePicker.js?v=3";
+import { createEventEditor } from "./eventEditor.js?v=1";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { toast } from "../toast.js?v=1";
 
 const WEEK_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 const DAYS_BACK = 14;
 const DAYS_AHEAD = 14;
+const FELLES_HOUSE = "Sameiet";
 const MAX_EVENTS_VISIBLE = 3;
 
 function dateOnlyIso(ts) {
@@ -36,11 +37,6 @@ function dateOnlyIso(ts) {
   const mm = String(d.getMonth() + 1).padStart(2, "0");
   const dd = String(d.getDate()).padStart(2, "0");
   return `${yyyy}-${mm}-${dd}`;
-}
-
-function parseDateOnly(s) {
-  const [y, m, d] = String(s).split("-").map(Number);
-  return new Date(y, (m || 1) - 1, d || 1).getTime();
 }
 
 export function createCalendarView({ getItems }) {
@@ -69,7 +65,7 @@ export function createCalendarView({ getItems }) {
     title: "Legg til hendelse",
     textContent: "+",
     hidden: true,
-    onclick: () => { if (openDay != null) openForm({ ts: openDay }); },
+    onclick: () => { if (openDay != null) editor.open({ dateIso: dateOnlyIso(openDay) }); },
   });
   const detailEmptyMsg = el("p", { class: "cal-detail-empty", hidden: true });
   const detailClose = el("button", {
@@ -83,77 +79,35 @@ export function createCalendarView({ getItems }) {
   const detailBackdrop = el("div", { class: "id-backdrop cal-detail-backdrop", hidden: true }, [detailDialog]);
   detailBackdrop.addEventListener("click", (e) => { if (e.target === detailBackdrop) closeDetail(); });
 
-  // ---- Event form modal ------------------------------------------------
-  const formTitleEl = el("h3", { class: "cal-form-title" });
-  const formDateEl = el("p", { class: "cal-form-date" });
-  const titleInput = el("input", { type: "text", maxLength: 80, placeholder: "F.eks. Dugnad" });
-  const descInput = el("textarea", { rows: 3, maxLength: 500, placeholder: "Valgfri beskrivelse" });
-  const timeFromPicker = createTimePicker({ value: "", minuteStep: 15, defaultTime: "12:00" });
-  const timeToPicker = createTimePicker({ value: "", minuteStep: 15, defaultTime: "13:00" });
-  const allDayCheckbox = el("input", { type: "checkbox" });
-  allDayCheckbox.addEventListener("change", () => {
-    const off = allDayCheckbox.checked;
-    timeFromPicker.setDisabled(off);
-    timeToPicker.setDisabled(off);
+  // ---- Event editor (shared component) --------------------------------
+  const editor = createEventEditor({
+    showHouse: false,
+    showDate: false,
+    fellesHouse: FELLES_HOUSE,
+    getDefaultHouse: () => getCurrentHouse(),
+    onSubmit: async ({ mode, id, data }) => {
+      if (mode === "edit") {
+        await updateEvent(id, data);
+        toast("Hendelsen er oppdatert.");
+      } else {
+        await createEvent(data);
+        toast("Hendelsen er opprettet.");
+      }
+    },
+    onAfterSubmit: () => reload(),
   });
-  const formError = el("p", { class: "ed-error", hidden: true });
-  const formActions = el("div", { class: "cal-form-actions" });
-  const formClose = el("button", {
-    type: "button",
-    class: "id-close",
-    "aria-label": "Lukk",
-    textContent: "×",
-    onclick: () => closeForm(),
-  });
-  const formDialog = el("div", { class: "id-dialog cal-form-dialog" }, [
-    formClose,
-    formTitleEl,
-    formDateEl,
-    el("label", { class: "ed-field" }, [
-      el("span", { textContent: "Tittel" }),
-      titleInput,
-    ]),
-    el("label", { class: "ed-field" }, [
-      el("span", { textContent: "Beskrivelse" }),
-      descInput,
-    ]),
-    el("div", { class: "cal-form-time-row" }, [
-      el("label", { class: "cal-form-time-toggle" }, [
-        allDayCheckbox,
-        el("span", { textContent: "Hele dagen" }),
-      ]),
-      el("div", { class: "cal-form-time-pickers" }, [
-        el("div", { class: "cal-form-time-col" }, [
-          el("span", { textContent: "Fra" }),
-          timeFromPicker.root,
-        ]),
-        el("div", { class: "cal-form-time-col" }, [
-          el("span", { textContent: "Til" }),
-          timeToPicker.root,
-        ]),
-      ]),
-    ]),
-    formError,
-    formActions,
-  ]);
-  const formBackdrop = el("div", { class: "id-backdrop cal-form-backdrop", hidden: true }, [formDialog]);
-  formBackdrop.addEventListener("click", (e) => { if (e.target === formBackdrop) closeForm(); });
 
-  document.body.append(backdrop, detailBackdrop, formBackdrop);
+  document.body.append(backdrop, detailBackdrop);
 
   let rows = [];
   let events = [];
   let unsubscribe = null;
   let isOpen = false;
   let openDay = null;
-  let formMode = "create";
-  let formEditingId = null;
-  let formDateIso = null;
 
   document.addEventListener("keydown", (e) => {
     if (e.key !== "Escape") return;
-    if (!formBackdrop.hidden) closeForm();
-    else if (!detailBackdrop.hidden) closeDetail();
+    if (!detailBackdrop.hidden) closeDetail();
     else if (isOpen) close();
   });
 
@@ -168,19 +122,14 @@ export function createCalendarView({ getItems }) {
   function close() {
     isOpen = false;
     backdrop.hidden = true;
-    if (detailBackdrop.hidden && formBackdrop.hidden) document.body.classList.remove("id-open");
+    if (detailBackdrop.hidden) document.body.classList.remove("id-open");
     if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   }
 
   function closeDetail() {
     detailBackdrop.hidden = true;
     openDay = null;
-    if (!isOpen && formBackdrop.hidden) document.body.classList.remove("id-open");
-  }
-
-  function closeForm() {
-    formBackdrop.hidden = true;
-    if (!isOpen && detailBackdrop.hidden) document.body.classList.remove("id-open");
+    if (!isOpen) document.body.classList.remove("id-open");
   }
 
   async function reload() {
@@ -311,10 +260,11 @@ export function createCalendarView({ getItems }) {
   function buildEventLine(entry) {
     if (entry.source === "event") {
       const t = formatEventTime(entry.row);
-      const label = t ? `${t} ${entry.row.title}` : entry.row.title;
+      const label = entry.row.title || "";
+      const tooltip = t ? `${entry.row.house} — ${t} ${label}` : `${entry.row.house} — ${label}`;
       return el("div", {
         class: `cal-event cal-event--custom`,
-        title: `${entry.row.house} — ${label}`,
+        title: tooltip,
       }, [
         el("span", { class: "cal-event-house", textContent: entry.row.house || "?" }),
         el("span", { class: "cal-event-name", textContent: label }),
@@ -352,7 +302,7 @@ export function createCalendarView({ getItems }) {
       detailList.appendChild(el("p", { class: "cal-detail-empty", textContent: "Ingenting registrert." }));
     } else {
       for (const ev of dayEvents) {
-        detailList.appendChild(buildEventDetailRow(ev, me === ev.row.house));
+        detailList.appendChild(buildEventDetailRow(ev, !!me && (me === ev.row.house || ev.row.house === FELLES_HOUSE)));
       }
       for (const ev of reservations) {
         const item = itemBySlug(ev.row.slug);
@@ -400,7 +350,7 @@ export function createCalendarView({ getItems }) {
         label: "Rediger",
         size: "small",
         variant: "default",
-        onClick: () => openForm({ ts: parseDateOnly(ev.event_date), event: ev }),
+        onClick: () => editor.open({ event: ev }),
       }).root);
       actions.appendChild(createButton({
         label: "Slett",
@@ -428,81 +378,6 @@ export function createCalendarView({ getItems }) {
       await reload();
     } catch (err) {
       toast(`Kunne ikke slette: ${err.message || err}`, { kind: "error" });
-    }
-  }
-
-  function openForm({ ts, event = null }) {
-    formMode = event ? "edit" : "create";
-    formEditingId = event ? event.id : null;
-    formDateIso = event ? event.event_date : dateOnlyIso(ts);
-    titleInput.value = event ? event.title || "" : "";
-    descInput.value = event ? event.description || "" : "";
-    const hasTimes = !!(event && (event.time_from || event.time_to));
-    allDayCheckbox.checked = event ? !hasTimes : false;
-    timeFromPicker.setValue(event && event.time_from ? event.time_from : "");
-    timeToPicker.setValue(event && event.time_to ? event.time_to : "");
-    timeFromPicker.setDisabled(allDayCheckbox.checked);
-    timeToPicker.setDisabled(allDayCheckbox.checked);
-    formError.hidden = true;
-    formError.textContent = "";
-
-    formTitleEl.textContent = event ? "Rediger hendelse" : "Ny hendelse";
-    const dLabel = new Date(parseDateOnly(formDateIso)).toLocaleDateString("no-NO", { weekday: "long", day: "numeric", month: "long" });
-    formDateEl.textContent = dLabel.charAt(0).toUpperCase() + dLabel.slice(1);
-
-    clear(formActions);
-    formActions.appendChild(createButton({
-      label: "Avbryt",
-      variant: "cancel",
-      onClick: () => closeForm(),
-    }).root);
-    formActions.appendChild(createButton({
-      label: event ? "Lagre" : "Opprett",
-      variant: "confirm",
-      onClick: () => submitForm(),
-    }).root);
-
-    formBackdrop.hidden = false;
-    document.body.classList.add("id-open");
-    setTimeout(() => titleInput.focus(), 0);
-  }
-
-  async function submitForm() {
-    const title = titleInput.value.trim();
-    const description = descInput.value.trim();
-    const allDay = allDayCheckbox.checked;
-    const time_from = allDay ? null : (timeFromPicker.getValue() || null);
-    const time_to = allDay ? null : (timeToPicker.getValue() || null);
-    if (!title) {
-      formError.textContent = "Tittel er påkrevd.";
-      formError.hidden = false;
-      titleInput.focus();
-      return;
-    }
-    if (time_from && time_to && time_to < time_from) {
-      formError.textContent = "Sluttidspunkt må være etter starttidspunkt.";
-      formError.hidden = false;
-      return;
-    }
-    const me = getCurrentHouse();
-    if (!me) {
-      formError.textContent = "Velg bolig først.";
-      formError.hidden = false;
-      return;
-    }
-    try {
-      if (formMode === "edit") {
-        await updateEvent(formEditingId, { title, description, event_date: formDateIso, time_from, time_to });
-        toast("Hendelsen er oppdatert.");
-      } else {
-        await createEvent({ house: me, title, description, event_date: formDateIso, time_from, time_to });
-        toast("Hendelsen er opprettet.");
-      }
-      closeForm();
-      await reload();
-    } catch (err) {
-      formError.textContent = err.message || String(err);
-      formError.hidden = false;
     }
   }
 

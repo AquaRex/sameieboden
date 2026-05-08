@@ -2192,6 +2192,13 @@ body.id-open { overflow: hidden; }
   user-select: none;
 }
 .cal-form-time-toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent-deep); }
+.cal-form-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  align-items: center;
+  justify-content: space-between;
+}
 .cal-form-time-pickers {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2258,3 +2265,6 @@ body.id-open { overflow: hidden; }
 .admin-action-btn:hover { background: var(--bg); }
 .admin-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--bg-deeper); }
 .admin-td-desc { max-width: 24rem; white-space: pre-wrap; word-break: break-word; }
+
+/* Event editor sits above the calendar's own backdrop */
+.cal-form-backdrop { z-index: 300; }
