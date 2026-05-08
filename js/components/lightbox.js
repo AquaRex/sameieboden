@@ -136,7 +136,7 @@ export function createLightbox() {
       "aria-modal": "true",
       onclick: () => close(),
     },
-    [closeBtn, prevBtn, stage, nextBtn, captionEl, counterEl]
+    [closeBtn, prevBtn, stage, nextBtn, el("div", { class: "lb-info" }, [captionEl, counterEl])]
   );
   document.body.appendChild(backdrop);
 
