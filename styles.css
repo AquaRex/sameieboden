@@ -1348,6 +1348,29 @@ body.id-open { overflow: hidden; }
   color: var(--warn);
 }
 
+.id-history-delete {
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.id-history-delete:hover {
+  background: var(--warn-soft);
+  border-color: #e8b6af;
+  color: var(--warn);
+}
+
 @media (max-width: 700px) {
   .id-grid { grid-template-columns: 1fr; gap: 1rem; padding: 1rem; }
   .id-image-wrap { aspect-ratio: 4 / 3; }
@@ -1569,3 +1592,153 @@ body.id-open { overflow: hidden; }
   .house-badge { width: 100%; justify-content: center; }
   .hp-grid { grid-template-columns: repeat(3, 1fr); }
 }
+
+/* ----- Admin page ----- */
+.admin-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 0 1rem;
+}
+.admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin: 0 0 1rem;
+}
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.admin-field-label {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.admin-input {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  min-width: 10rem;
+}
+.admin-summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 14px;
+  background: #fff;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.admin-table th,
+.admin-table td {
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bg-deeper);
+}
+.admin-table thead th {
+  background: var(--bg);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody tr:hover { background: var(--bg); }
+.admin-th-actions, .admin-td-actions { width: 2.5rem; text-align: right; }
+.admin-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .admin-input { min-width: 0; width: 100%; }
+  .admin-field { flex: 1 1 100%; }
+}
+
+/* ----- Themed dropdown ----- */
+.dd { position: relative; display: inline-block; min-width: 10rem; }
+.dd-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.7rem;
+  background: #fff;
+  color: var(--ink);
+  border: 2px solid var(--bg-deeper);
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--bg-deeper);
+  transition: transform 0.05s ease;
+}
+.dd-trigger:hover { border-color: var(--ink-soft); }
+.dd-trigger:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(127, 184, 134, 0.35), 0 3px 0 var(--bg-deeper);
+}
+.dd.is-open .dd-trigger { border-color: var(--accent); }
+.dd-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dd-label--placeholder { color: var(--ink-soft); font-weight: 600; }
+.dd-chevron {
+  display: inline-flex;
+  width: 1rem;
+  height: 1rem;
+  color: var(--ink-soft);
+  transition: transform 0.15s ease;
+}
+.dd-chevron svg { width: 100%; height: 100%; }
+.dd.is-open .dd-chevron { transform: rotate(180deg); }
+.dd-list {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+  background: #fff;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 3px 0 var(--bg-deeper);
+  max-height: 16rem;
+  overflow-y: auto;
+}
+.dd-option {
+  padding: 0.5rem 0.65rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+.dd-option:hover,
+.dd-option.is-active { background: var(--bg); }
+.dd-option.is-selected {
+  background: var(--accent);
+  color: #fff;
+}
+.dd-option.is-selected.is-active { background: var(--accent-deep); }

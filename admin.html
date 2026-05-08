@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#fdfbe5" />
+  <title>Admin · Sameie Boden</title>
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css?v=20" />
+</head>
+<body>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="hero-badge" aria-hidden="true">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <path d="M4 14 L16 4 L28 14 V27 a1 1 0 0 1 -1 1 H5 a1 1 0 0 1 -1 -1 Z" fill="currentColor"/>
+        </svg>
+      </span>
+      <h1 class="hero-title">Admin</h1>
+      <p class="hero-lead">Full reservasjonshistorikk</p>
+    </div>
+  </section>
+
+  <main class="container main">
+    <div class="admin-toolbar">
+      <a href="./" class="btn btn-ghost">← Tilbake</a>
+    </div>
+    <section id="admin-root"></section>
+  </main>
+
+  <script type="module" src="js/admin.js?v=2"></script>
+</body>
+</html>

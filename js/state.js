@@ -103,6 +103,23 @@ export async function getHistory(slug, limit = 10) {
   return data || [];
 }
 
+// All past reservations across every slug, with optional filters.
+// Used by the localhost-only admin page.
+export async function getAllHistory({ house = null, slug = null, limit = 500 } = {}) {
+  let q = supabase
+    .from("reservations")
+    .select("*")
+    .not("period_to", "is", null)
+    .lte("period_to", new Date().toISOString())
+    .order("period_to", { ascending: false })
+    .limit(limit);
+  if (house) q = q.eq("house", house);
+  if (slug) q = q.eq("slug", slug);
+  const { data, error } = await q;
+  if (error) { console.warn("getAllHistory", error); return []; }
+  return data || [];
+}
+
 export async function loadAllState() {
   // Pull only current + future rows. History is fetched on demand.
   const nowISO = new Date().toISOString();

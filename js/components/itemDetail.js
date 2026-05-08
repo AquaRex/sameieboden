@@ -7,7 +7,7 @@ import { getCurrentHouse, subscribeCurrentHouse } from "../currentHouse.js?v=1";
 import {
   getState, getUpcoming, subscribeState, getHistory,
   useItem, reserveBlocks, endActive, cancelReservation,
-} from "../state.js?v=7";
+} from "../state.js?v=8";
 import { createDayPicker } from "./dayPicker.js?v=1";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../util/dates.js?v=1";
@@ -19,7 +19,7 @@ const STATUS_LABEL = {
   reserved:  "Reservert",
 };
 
-export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = false } = {}) {
+export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = false, allowHistoryDelete = false } = {}) {
   let currentItem = null;
   let unsubscribeState = null;
   let unsubscribeHouse = null;
@@ -248,9 +248,33 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
           el("strong", { textContent: row.house || "?" }),
           el("span", { class: "id-history-action", textContent: " brukte " + formatBlock(row.period_from, row.period_to) }),
           el("span", { class: "id-history-when", textContent: formatWhen(row.period_to) }),
+          allowHistoryDelete ? el("button", {
+            type: "button",
+            class: "id-history-delete",
+            title: "Slett oppføring",
+            "aria-label": "Slett oppføring",
+            textContent: "×",
+            onclick: () => onDeleteHistory(row),
+          }) : null,
         ])
       );
     }
+  }
+
+  async function onDeleteHistory(row) {
+    const ok = await confirmDialog({
+      title: "Slett historikkoppføring?",
+      message: `${row.house || "?"} — ${formatBlock(row.period_from, row.period_to)}. Dette kan ikke angres.`,
+      confirmLabel: "Slett",
+      cancelLabel: "Avbryt",
+      danger: true,
+    });
+    if (!ok) return;
+    try {
+      await cancelReservation(row.id);
+      toast("Oppføringen er slettet.", { kind: "success" });
+      await refreshHistory();
+    } catch (err) { handleErr(err); }
   }
 
   // ---- Public ------------------------------------------------------------

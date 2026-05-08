@@ -5,17 +5,17 @@ import { createSearchBar } from "./components/searchBar.js?v=3";
 import { createTagFilters } from "./components/tagFilters.js?v=3";
 import { createGrid } from "./components/grid.js?v=3";
 import { createEditor } from "./components/editor.js?v=3";
-import { createToolbar } from "./components/toolbar.js?v=3";
+import { createToolbar } from "./components/toolbar.js?v=4";
 import { createViewToggle } from "./components/viewToggle.js?v=3";
 import { createLightbox } from "./components/lightbox.js?v=3";
-import { createItemDetail } from "./components/itemDetail.js?v=20";
+import { createItemDetail } from "./components/itemDetail.js?v=21";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
 import { createInstallButton } from "./components/installButton.js?v=2";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=7";
+import { loadAllState, startRealtime, subscribeState } from "./state.js?v=8";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -70,6 +70,7 @@ const itemDetail = createItemDetail({
   },
   onChangeHouse: () => housePicker.open({ dismissable: true }),
   showHistory: editable,
+  allowHistoryDelete: editable,
 });
 let lastFiltered = [];
 
