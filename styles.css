@@ -1024,9 +1024,10 @@ body.id-open { overflow: hidden; }
   height: 100%;
   object-fit: cover;
   display: block;
+  transform: scale(var(--id-image-zoom, 1));
   transition: transform 0.2s var(--easing);
 }
-.id-image-wrap:hover .id-image { transform: scale(1.03); }
+.id-image-wrap:hover .id-image { transform: scale(calc(var(--id-image-zoom, 1) * 1.03)); }
 
 .id-info {
   display: flex;

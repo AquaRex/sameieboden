@@ -270,9 +270,15 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
     if (src) {
       imageEl.src = src;
       imageEl.alt = item.name;
+      const pos = item.imagePos || "50% 50%";
+      const zoom = item.imageZoom || 1;
+      imageEl.style.objectPosition = pos;
+      imageEl.style.transformOrigin = pos;
+      imageWrap.style.setProperty("--id-image-zoom", String(zoom));
       imageWrap.style.cursor = "zoom-in";
     } else {
       imageEl.removeAttribute("src");
+      imageEl.style.transform = "";
       imageWrap.style.cursor = "default";
     }
     historyList.replaceChildren(el("li", { class: "id-history-empty", textContent: "Laster…", hidden: !showHistory }));
