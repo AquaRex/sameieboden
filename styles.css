@@ -587,7 +587,10 @@ body.lb-open { overflow: hidden; }
   background: rgba(0, 0, 0, 0.88);
   z-index: 1000;
   display: grid;
-  grid-template-rows: 1fr auto auto;
+  /* minmax(0, 1fr) lets the stage row actually shrink to fit the
+     viewport; a plain 1fr row will grow to the image's intrinsic
+     height and clip the top/bottom on portrait images. */
+  grid-template-rows: minmax(0, 1fr) auto auto;
   grid-template-columns: auto 1fr auto;
   align-items: center;
   padding: 1rem;
@@ -601,11 +604,14 @@ body.lb-open { overflow: hidden; }
   align-items: center;
   justify-content: center;
   min-height: 0;
+  height: 100%;
   overflow: hidden;
 }
 .lb-image {
   max-width: 100%;
   max-height: 100%;
+  width: auto;
+  height: auto;
   object-fit: contain;
   display: block;
   border-radius: 6px;

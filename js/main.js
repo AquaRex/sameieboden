@@ -56,17 +56,31 @@ const editor = editable
   ? createEditor({
       getKnownTags: () => store.allTags(),
       onSave: async (mode, id, data) => {
-        // If a fresh image was dropped (data URL), upload it as a real file
-        // first so the public site can serve it from images/.
+        // If fresh images were dropped (data URLs), upload them as real files
+        // first so the public site can serve them from images/.
+        // Two sizes are kept: a high-quality "image" for the lightbox, and
+        // a small "imageThumb" used by the cards.
+        const cacheBust = Date.now();
         if (data.image && data.image.startsWith("data:")) {
           try {
-            const path = await uploadImage(slugify(data.name), data.image);
-            // Cache-bust so a replaced image at the same path shows up
-            // immediately in the browser (the file on disk is overwritten,
-            // but its URL is otherwise identical).
-            data.image = `${path}?v=3)}`;
+            const slug = slugify(data.name);
+            const fullPath = await uploadImage(slug, data.image);
+            data.image = `${fullPath}?v=${cacheBust}`;
+            if (data.imageThumb && data.imageThumb.startsWith("data:")) {
+              const thumbPath = await uploadImage(`${slug}-thumb`, data.imageThumb);
+              data.imageThumb = `${thumbPath}?v=${cacheBust}`;
+            }
           } catch (err) {
             console.warn("Image upload failed, keeping inline data URL:", err);
+          }
+        } else if (data.imageThumb && data.imageThumb.startsWith("data:")) {
+          // Edge case: only the thumb is fresh (shouldn't normally happen).
+          try {
+            const slug = slugify(data.name);
+            const thumbPath = await uploadImage(`${slug}-thumb`, data.imageThumb);
+            data.imageThumb = `${thumbPath}?v=${cacheBust}`;
+          } catch (err) {
+            console.warn("Thumb upload failed:", err);
           }
         }
         if (mode === "edit" && id) store.update(id, data);

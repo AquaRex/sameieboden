@@ -1,11 +1,12 @@
 import { el } from "../dom.js?v=3";
 
 export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
-  const media = item.image
+  const cardSrc = item.imageThumb || item.image;
+  const media = cardSrc
     ? el("div", { class: "card-image-wrap" }, [
         el("img", {
           class: "card-image",
-          src: item.image,
+          src: cardSrc,
           alt: item.name,
           loading: "lazy",
           style: {

@@ -40,6 +40,7 @@ function normalize(raw) {
       ? raw.tags.map((t) => String(t).trim()).filter(Boolean)
       : [],
     image: typeof raw.image === "string" ? raw.image : "",
+    imageThumb: typeof raw.imageThumb === "string" ? raw.imageThumb : "",
     imagePos: typeof raw.imagePos === "string" && raw.imagePos.trim()
       ? raw.imagePos.trim()
       : "50% 50%",

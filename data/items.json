@@ -6,9 +6,10 @@
     "tags": [
       "hage"
     ],
-    "image": "images/rive.jpg",
-    "imagePos": "82.3% 52.9%",
-    "imageZoom": 1.24
+    "image": "images/rive.jpg?v=1778222174035",
+    "imageThumb": "images/rive-thumb.jpg?v=1778222174035",
+    "imagePos": "73.6% 53.0%",
+    "imageZoom": 1.39
   },
   {
     "id": "seed-2",
@@ -17,8 +18,9 @@
     "tags": [
       "hage"
     ],
-    "image": "images/plantespade.jpg",
-    "imagePos": "50.0% 14.8%",
+    "image": "images/plantespade.jpg?v=1778222158937",
+    "imageThumb": "images/plantespade-thumb.jpg?v=1778222158937",
+    "imagePos": "50.0% 13.6%",
     "imageZoom": 1
   },
   {
@@ -28,9 +30,10 @@
     "tags": [
       "hage"
     ],
-    "image": "images/beskjaeringssaks.jpg?v=1778189511332",
-    "imagePos": "100.0% 26.4%",
-    "imageZoom": 1.0546198473777084
+    "image": "images/beskjaeringssaks.jpg?v=1778221931124",
+    "imageThumb": "images/beskjaeringssaks-thumb.jpg?v=1778221931124",
+    "imagePos": "50.0% 28.8%",
+    "imageZoom": 1
   },
   {
     "id": "seed-4",
@@ -39,9 +42,10 @@
     "tags": [
       "hage"
     ],
-    "image": "images/ugressfjerner.jpg?v=1778189552166",
-    "imagePos": "78.4% 73.8%",
-    "imageZoom": 1.44
+    "image": "images/ugressfjerner.jpg?v=1778222202633",
+    "imageThumb": "images/ugressfjerner-thumb.jpg?v=1778222202633",
+    "imagePos": "50.0% 71.2%",
+    "imageZoom": 1
   },
   {
     "id": "seed-5",
@@ -50,8 +54,9 @@
     "tags": [
       "hage"
     ],
-    "image": "images/hekksaks.jpg",
-    "imagePos": "50.0% 6.6%",
+    "image": "images/hekksaks.jpg?v=1778221951096",
+    "imageThumb": "images/hekksaks-thumb.jpg?v=1778221951096",
+    "imagePos": "50.0% 8.6%",
     "imageZoom": 1
   },
   {
@@ -61,8 +66,9 @@
     "tags": [
       "hage"
     ],
-    "image": "images/kultivator.jpg",
-    "imagePos": "50.0% 12.6%",
+    "image": "images/kultivator.jpg?v=1778222150000",
+    "imageThumb": "images/kultivator-thumb.jpg?v=1778222150000",
+    "imagePos": "50.0% 16.1%",
     "imageZoom": 1
   },
   {
@@ -72,8 +78,9 @@
     "tags": [
       "hage"
     ],
-    "image": "images/spisspade.jpg?v=1778189542345",
-    "imagePos": "71.9% 63.6%",
-    "imageZoom": 1.31
+    "image": "images/spisspade.jpg?v=1778222186000",
+    "imageThumb": "images/spisspade-thumb.jpg?v=1778222186000",
+    "imagePos": "74.2% 64.0%",
+    "imageZoom": 1.36
   }
 ]

@@ -28,7 +28,9 @@ JS_DIR = ROOT / "js"
 INDEX = ROOT / "index.html"
 
 # Match `?v=...` up to the next quote/space/closing paren/end-of-line.
-VERSION_RE = re.compile(r"\?v=[^\"'\s\)]*")
+# Excludes `$` and `{` so we don't mangle JS template literals like
+# `?v=${Date.now()}` that we deliberately keep in the source.
+VERSION_RE = re.compile(r"\?v=[^\"'\s\)\$\{\}]*")
 # Match relative .js imports/re-exports without a version.
 IMPORT_RE = re.compile(
     r"""(?P<keyword>(?:import|export)\b[^"']*?\bfrom\s*|import\s*\(\s*)"""

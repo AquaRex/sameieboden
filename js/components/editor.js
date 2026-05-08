@@ -4,11 +4,16 @@
 import { el, clear } from "../dom.js?v=3";
 
 const MAX_IMAGE_BYTES = 600 * 1024; // ~600KB after compression
+const FULL_MAX_DIM = 1600;
+const FULL_QUALITY = 0.85;
+const THUMB_MAX_DIM = 900;
+const THUMB_QUALITY = 0.85;
 
 export function createEditor({ onSave, getKnownTags }) {
   let mode = "add";        // "add" | "edit"
   let editingId = null;
-  let imageDataUrl = "";
+  let imageDataUrl = "";       // full-size, used in lightbox
+  let imageThumbDataUrl = "";  // small, used in cards
   let imagePos = "50% 50%";
   let imageZoom = 1;
   let tags = [];
@@ -95,6 +100,7 @@ export function createEditor({ onSave, getKnownTags }) {
     descInput.value = item?.description ?? "";
     tags = [...(item?.tags ?? [])];
     imageDataUrl = item?.image ?? "";
+    imageThumbDataUrl = item?.imageThumb ?? "";
     imagePos = item?.imagePos ?? "50% 50%";
     imageZoom = Number.isFinite(item?.imageZoom) && item.imageZoom >= 1 ? item.imageZoom : 1;
     errorBox.textContent = "";
@@ -191,7 +197,9 @@ export function createEditor({ onSave, getKnownTags }) {
     const frame = el("div", { class: "ed-crop" });
     const img = el("img", {
       class: "ed-crop-img",
-      src: imageDataUrl,
+      // Prefer the compressed thumbnail so the preview matches what the
+      // card will actually show (same resolution + JPEG artifacts).
+      src: imageThumbDataUrl || imageDataUrl,
       alt: "",
       draggable: false,
     });
@@ -351,6 +359,7 @@ export function createEditor({ onSave, getKnownTags }) {
       textContent: "Fjern bilde",
       onclick: () => {
         imageDataUrl = "";
+        imageThumbDataUrl = "";
         imagePos = "50% 50%";
         imageZoom = 1;
         refreshDropZone();
@@ -381,11 +390,14 @@ export function createEditor({ onSave, getKnownTags }) {
       return;
     }
     try {
-      imageDataUrl = await compressImage(file, 1000, 0.82);
-      if (imageDataUrl.length > MAX_IMAGE_BYTES * 1.4) {
-        // Try harder for very large images.
-        imageDataUrl = await compressImage(file, 800, 0.7);
+      // Generate two sizes from the same source: a high-quality "full" image
+      // for the lightbox, and a small thumbnail for the cards.
+      imageDataUrl = await compressImage(file, FULL_MAX_DIM, FULL_QUALITY);
+      if (imageDataUrl.length > MAX_IMAGE_BYTES * 5) {
+        // Very large source — step down quality to keep storage reasonable.
+        imageDataUrl = await compressImage(file, FULL_MAX_DIM, 0.78);
       }
+      imageThumbDataUrl = await compressImage(file, THUMB_MAX_DIM, THUMB_QUALITY);
       imagePos = "50% 50%";
       imageZoom = 1;
       errorBox.textContent = "";
@@ -413,6 +425,7 @@ export function createEditor({ onSave, getKnownTags }) {
       description: descInput.value.trim(),
       tags: [...tags],
       image: imageDataUrl,
+      imageThumb: imageThumbDataUrl,
       imagePos,
       imageZoom,
     });

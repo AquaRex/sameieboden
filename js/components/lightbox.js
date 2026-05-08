@@ -35,6 +35,11 @@ export function createLightbox() {
 
   const stage = el("div", { class: "lb-stage" }, [imgEl]);
 
+  // Close when the user clicks anywhere outside the image and outside the
+  // on-screen controls (prev/next/close). The image itself swallows the
+  // click so you can still pan the cursor over it without dismissing.
+  imgEl.addEventListener("click", (e) => e.stopPropagation());
+
   const backdrop = el(
     "div",
     {
@@ -42,7 +47,7 @@ export function createLightbox() {
       hidden: true,
       role: "dialog",
       "aria-modal": "true",
-      onclick: (e) => { if (e.target === backdrop) close(); },
+      onclick: () => close(),
     },
     [closeBtn, prevBtn, stage, nextBtn, captionEl, counterEl]
   );
