@@ -34,26 +34,28 @@ export function createLightbox() {
 
   const stage = el("div", { class: "lb-stage" }, [imgEl]);
 
+  // macOS handles pinch-zoom on images natively (and better than we can
+  // emulate). Everywhere else, wire up wheel-zoom + drag-to-pan so mouse
+  // users on Windows/Linux still get a way to zoom in.
+  const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || "");
   let zoom = 1;
   let panX = 0;
   let panY = 0;
-  const MIN_ZOOM = 1;
-  const MAX_ZOOM = 6;
+  let dragging = false;
 
   function applyTransform() {
+    if (isMac) return;
     imgEl.style.transform = `translate(${panX}px, ${panY}px) scale(${zoom})`;
     imgEl.style.cursor = zoom > 1 ? (dragging ? "grabbing" : "grab") : "";
   }
 
   function resetZoom() {
-    zoom = 1;
-    panX = 0;
-    panY = 0;
+    zoom = 1; panX = 0; panY = 0;
     applyTransform();
   }
 
   function setZoom(next, anchor) {
-    const z = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, next));
+    const z = Math.max(1, Math.min(6, next));
     if (anchor && z !== zoom) {
       const rect = imgEl.getBoundingClientRect();
       const cx = rect.left + rect.width / 2;
@@ -69,51 +71,48 @@ export function createLightbox() {
     applyTransform();
   }
 
-  stage.addEventListener("wheel", (e) => {
-    if (backdrop.hidden) return;
-    e.preventDefault();
-    const factor = Math.exp(-e.deltaY * 0.0015);
-    setZoom(zoom * factor, { x: e.clientX, y: e.clientY });
-  }, { passive: false });
+  if (!isMac) {
+    stage.addEventListener("wheel", (e) => {
+      if (backdrop.hidden) return;
+      e.preventDefault();
+      const factor = Math.exp(-e.deltaY * 0.0015);
+      setZoom(zoom * factor, { x: e.clientX, y: e.clientY });
+    }, { passive: false });
 
-  let dragging = false;
-  let startX = 0, startY = 0, startPanX = 0, startPanY = 0;
-  imgEl.addEventListener("pointerdown", (e) => {
-    if (zoom <= 1) return;
-    e.preventDefault();
-    e.stopPropagation();
-    dragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    startPanX = panX;
-    startPanY = panY;
-    imgEl.setPointerCapture(e.pointerId);
-    applyTransform();
-  });
-  imgEl.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    panX = startPanX + (e.clientX - startX);
-    panY = startPanY + (e.clientY - startY);
-    applyTransform();
-  });
-  const stopDrag = (e) => {
-    if (!dragging) return;
-    dragging = false;
-    try { imgEl.releasePointerCapture(e.pointerId); } catch {}
-    applyTransform();
-  };
-  imgEl.addEventListener("pointerup", stopDrag);
-  imgEl.addEventListener("pointercancel", stopDrag);
+    let startX = 0, startY = 0, startPanX = 0, startPanY = 0;
+    imgEl.addEventListener("pointerdown", (e) => {
+      if (zoom <= 1) return;
+      e.preventDefault();
+      e.stopPropagation();
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      startPanX = panX; startPanY = panY;
+      imgEl.setPointerCapture(e.pointerId);
+      applyTransform();
+    });
+    imgEl.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      panX = startPanX + (e.clientX - startX);
+      panY = startPanY + (e.clientY - startY);
+      applyTransform();
+    });
+    const stopDrag = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      try { imgEl.releasePointerCapture(e.pointerId); } catch {}
+      applyTransform();
+    };
+    imgEl.addEventListener("pointerup", stopDrag);
+    imgEl.addEventListener("pointercancel", stopDrag);
 
-  // Double-click toggles between fit and 2x.
-  imgEl.addEventListener("dblclick", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (zoom > 1) resetZoom();
-    else setZoom(2, { x: e.clientX, y: e.clientY });
-  });
+    imgEl.addEventListener("dblclick", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (zoom > 1) resetZoom();
+      else setZoom(2, { x: e.clientX, y: e.clientY });
+    });
+  }
 
-  // Clicks on the image only dismiss when not zoomed; otherwise they pan.
   imgEl.addEventListener("click", (e) => e.stopPropagation());
 
   const backdrop = el(
