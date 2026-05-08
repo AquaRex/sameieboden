@@ -2213,3 +2213,48 @@ body.id-open { overflow: hidden; }
   .tp-display { height: 2.9rem; }
   .cal-form-time-pickers { gap: 0.5rem; }
 }
+
+/* ==================== Admin tabs ==================== */
+.admin-tabs {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0 0 1rem;
+  border-bottom: 2px solid var(--bg-deep);
+}
+.admin-tab {
+  appearance: none;
+  background: transparent;
+  border: 2px solid transparent;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  padding: 0.55rem 1rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  margin-bottom: -2px;
+}
+.admin-tab:hover { color: var(--ink); }
+.admin-tab.is-active {
+  background: var(--surface);
+  border-color: var(--bg-deep);
+  border-bottom-color: var(--surface);
+  color: var(--ink);
+}
+.admin-action-btn {
+  appearance: none;
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  margin-right: 0.25rem;
+  box-shadow: 0 2px 0 var(--bg-deeper);
+}
+.admin-action-btn:hover { background: var(--bg); }
+.admin-action-btn:active { transform: translateY(2px); box-shadow: 0 0 0 var(--bg-deeper); }
+.admin-td-desc { max-width: 24rem; white-space: pre-wrap; word-break: break-word; }

@@ -16,7 +16,7 @@ import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { createHamburgerMenu } from "./components/hamburgerMenu.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=12";
+import { loadAllState, startRealtime, subscribeState } from "./state.js?v=13";
 
 const editable = isLocal();
 let currentQuery = "";

@@ -18,7 +18,7 @@ import {
   updateEvent,
   deleteEvent,
   subscribeState,
-} from "../state.js?v=11";
+} from "../state.js?v=13";
 import { getCurrentHouse } from "../currentHouse.js?v=1";
 import { createButton } from "./button.js?v=1";
 import { createTimePicker } from "./timePicker.js?v=3";

@@ -210,8 +210,9 @@ export async function createEvent({ house, title, description, event_date, time_
   return data;
 }
 
-export async function updateEvent(id, { title, description, event_date, time_from, time_to }) {
+export async function updateEvent(id, { house, title, description, event_date, time_from, time_to }) {
   const patch = {};
+  if (house != null) patch.house = String(house);
   if (title != null) patch.title = String(title).trim();
   if (description !== undefined) patch.description = description ? String(description).trim() : null;
   if (event_date != null) patch.event_date = event_date;
@@ -232,6 +233,20 @@ export async function deleteEvent(id) {
   const { error } = await supabase.from("events").delete().eq("id", id);
   if (error) throw error;
   notify();
+}
+
+// Admin: fetch all events across all houses, optionally filtered.
+export async function getAllEvents({ house = null, limit = 500 } = {}) {
+  let q = supabase
+    .from("events")
+    .select("*")
+    .order("event_date", { ascending: false })
+    .order("time_from", { ascending: true, nullsFirst: true })
+    .limit(limit);
+  if (house) q = q.eq("house", house);
+  const { data, error } = await q;
+  if (error) throw error;
+  return data || [];
 }
 
 export async function loadAllState() {
