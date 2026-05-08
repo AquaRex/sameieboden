@@ -1486,33 +1486,57 @@ body.id-open { overflow: hidden; }
 }
 .search-row .search { flex: 1 1 auto; }
 
-/* Overflow ⋯ menu (mobile collapse target for calendar + house badge) */
-.overflow-menu { position: relative; display: none; }
-.overflow-trigger {
-  padding: 0.6rem 0.7rem;
+/* Hamburger menu (top-left of hero). Holds rarely-used global actions. */
+.ham-mount {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 40;
+}
+.house-mount {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 40;
+}
+.ham-menu { position: relative; }
+.ham-trigger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: var(--surface);
+  color: var(--ink);
+  border: 2px solid var(--bg-deep);
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  transition: transform 0.08s var(--easing), border-color 0.12s var(--easing);
 }
-.overflow-trigger svg { width: 22px; height: 22px; display: block; }
-.overflow-panel {
+.ham-trigger:hover { border-color: var(--ink-soft); }
+.ham-trigger:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--bg-deeper); }
+.ham-trigger:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+.ham-trigger svg { width: 22px; height: 22px; display: block; }
+.ham-panel {
   position: absolute;
-  top: calc(100% + 0.4rem);
-  right: 0;
+  top: calc(100% + 0.5rem);
+  left: 0;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  padding: 0.6rem;
+  gap: 0.5rem;
+  padding: 0.7rem;
   background: var(--surface);
   border: 2px solid var(--bg-deep);
   border-radius: 14px;
   box-shadow: var(--shadow-card);
-  min-width: 180px;
+  min-width: 200px;
 }
-.overflow-panel[hidden] { display: none; }
-.overflow-panel .btn,
-.overflow-panel .house-badge {
+.ham-panel[hidden] { display: none; }
+.ham-panel .btn,
+.ham-panel .house-badge {
   width: 100%;
   justify-content: flex-start;
 }
@@ -1630,8 +1654,6 @@ body.id-open { overflow: hidden; }
 .id-picker-actions .btn { flex: 1 1 0; }
 
 @media (max-width: 600px) {
-  .search-row { flex-wrap: nowrap; }
-  .overflow-menu { display: inline-flex; }
   .hp-grid { grid-template-columns: repeat(3, 1fr); }
 }
 

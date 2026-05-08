@@ -13,7 +13,7 @@ import { createCalendarView } from "./components/calendarView.js?v=1";
 import { createButton } from "./components/button.js?v=1";
 import { createInstallButton } from "./components/installButton.js?v=2";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
-import { createOverflowMenu } from "./components/overflowMenu.js?v=1";
+import { createHamburgerMenu } from "./components/hamburgerMenu.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems } from "./serverApi.js?v=3";
 import { loadAllState, startRealtime, subscribeState } from "./state.js?v=10";
@@ -92,23 +92,15 @@ countRow.append(grid.count, viewToggle.root);
 
 const searchRow = document.createElement("div");
 searchRow.className = "search-row";
-const overflowMenu = createOverflowMenu({ ariaLabel: "Vis kalender og bolig" });
-searchRow.append(searchBar.root, calendarButton.root, houseBadge.root, overflowMenu.root);
+searchRow.append(searchBar.root);
 
-// On narrow viewports, fold the calendar + house badge into the overflow menu
-// so the search row stays a single line.
-const compactQuery = window.matchMedia("(max-width: 600px)");
-function applyCompactLayout(mq) {
-  if (mq.matches) {
-    overflowMenu.panel.append(calendarButton.root, houseBadge.root);
-  } else {
-    overflowMenu.close();
-    searchRow.insertBefore(calendarButton.root, overflowMenu.root);
-    searchRow.insertBefore(houseBadge.root, overflowMenu.root);
-  }
-}
-applyCompactLayout(compactQuery);
-compactQuery.addEventListener("change", applyCompactLayout);
+const hamMenu = createHamburgerMenu({ ariaLabel: "Meny" });
+hamMenu.panel.append(calendarButton.root);
+const hamMount = document.getElementById("ham-mount");
+if (hamMount) hamMount.appendChild(hamMenu.root);
+
+const houseMount = document.getElementById("house-mount");
+if (houseMount) houseMount.appendChild(houseBadge.root);
 
 const installButton = createInstallButton();
 if (installButton) {
