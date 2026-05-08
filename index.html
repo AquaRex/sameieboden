@@ -3,35 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- Force browsers to revalidate the HTML on every visit so that any
-       change pushed to git (new code, bumped asset version) is picked up
-       immediately, even by visitors who've been here before. -->
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
+  <meta name="theme-color" content="#fdfbe5" />
   <title>Sameie Boden</title>
-  <meta name="description" content="Oversikt over felles utstyr og verktøy i Sameie Boden." />
-  <link rel="stylesheet" href="styles.css?v=3" />
+  <meta name="description" content="Oversikt over felles utstyr og verktøy i Bedehusvegen Sameie." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body>
-  <header class="site-header">
-    <div class="container">
-      <h1>Bedehusveien Sameie</h1>
-      <p class="subtitle">Verktøy og utstyr i fellesboden</p>
+  <section class="hero">
+    <div class="container hero-inner">
+      <span class="hero-badge" aria-hidden="true">
+        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false">
+          <path d="M4 14 L16 4 L28 14 V27 a1 1 0 0 1 -1 1 H5 a1 1 0 0 1 -1 -1 Z" fill="currentColor"/>
+          <rect x="13" y="17" width="6" height="11" fill="#fdfbe5"/>
+        </svg>
+      </span>
+      <h1 class="hero-title">Sameie Boden</h1>
+      <p class="hero-lead">Felles utstyr og verktøy i Bedehusvegen sameie</p>
     </div>
-  </header>
+  </section>
 
-  <main class="container">
+  <main class="container main">
     <div id="toolbar-mount"></div>
     <section id="controls" class="controls" aria-label="Søk og filter"></section>
-    <section id="grid-section"></section>
+    <section id="grid-section" class="grid-section"></section>
   </main>
 
   <footer class="site-footer">
-    <div class="container">
-      <p>Mangler noe, eller skal noe legges til? Ta kontakt med Thomas Hetland!</p>
+    <div class="container site-footer-inner">
+      <div>
+        <p class="footer-title">Mangler noe i listen?</p>
+        <p class="footer-text">Ta kontakt med Thomas Hetland</p>
+      </div>
+      <p class="footer-meta">© Bedehusvegen Sameie</p>
     </div>
   </footer>
 
-  <script type="module" src="js/main.js?v=3"></script>
+  <script type="module" src="js/main.js?v=4"></script>
 </body>
 </html>
