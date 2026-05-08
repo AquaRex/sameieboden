@@ -146,28 +146,20 @@ export function createCalendarView({ getItems }) {
     return items.find((it) => it.slug === slug) || null;
   }
 
-  // Returns one entry per reservation that overlaps the day, so a multi-day
-  // reservation appears on every day from period_from through period_to (or
-  // through today if it's still ongoing without a return date).
-  //   - kind="past":   day is before today (already returned)
-  //   - kind="active": day is today
-  //   - kind="future": day is after today
-  function reservationKindForDay(ts, today) {
-    if (ts < today) return "return";
-    if (ts === today) return "active";
-    return "future";
-  }
-
+  // Reservations are shown purely as informational history on the calendar —
+  // they're never highlighted as "active" or "future". They all use the same
+  // muted "return" styling so they don't compete with user events.
   function reservationsForDay(ts) {
     const today = startOfDayMs();
     const out = [];
     for (const r of rows) {
       const from = startOfDayMs(Date.parse(r.period_from));
-      const to = r.period_to
+      const isReturned = !!r.period_to;
+      const to = isReturned
         ? startOfDayMs(Date.parse(r.period_to))
         : Math.max(from, today); // ongoing: span through today
       if (ts < from || ts > to) continue;
-      out.push({ row: r, kind: reservationKindForDay(ts, today) });
+      out.push({ row: r, kind: "return" });
     }
     out.sort((a, b) => (a.row.slug || "").localeCompare(b.row.slug || ""));
     return out;
@@ -384,27 +376,15 @@ export function createCalendarView({ getItems }) {
   return { open, close };
 }
 
-function formatPeriod(row, kind) {
+function formatPeriod(row /*, kind */) {
   const from = new Date(row.period_from);
   const fromStr = from.toLocaleDateString("no-NO", { day: "numeric", month: "short" });
-  if (kind === "return" && row.period_to) {
-    const to = new Date(row.period_to);
-    const toStr = to.toLocaleDateString("no-NO", { day: "numeric", month: "short" });
-    return `Levert ${toStr} (fra ${fromStr})`;
-  }
-  if (kind === "active") {
-    if (!row.period_to) return `Pågår — siden ${fromStr}`;
-    const to = new Date(row.period_to);
-    const toStr = to.toLocaleDateString("no-NO", { day: "numeric", month: "short" });
-    return `Pågår — leveres ${toStr}`;
-  }
-  // future
-  if (!row.period_to) return `Reservert fra ${fromStr}`;
-  const to = new Date(row.period_to);
+  const to = row.period_to ? new Date(row.period_to) : null;
+  if (!to) return fromStr;
   const sameDay = from.toDateString() === to.toDateString();
-  if (sameDay) return `Reservert ${fromStr}`;
+  if (sameDay) return fromStr;
   const toStr = to.toLocaleDateString("no-NO", { day: "numeric", month: "short" });
-  return `Reservert ${fromStr} – ${toStr}`;
+  return `${fromStr} – ${toStr}`;
 }
 
 function formatEventTime(ev) {
