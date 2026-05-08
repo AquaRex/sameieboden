@@ -8,14 +8,14 @@ import { createEditor } from "./components/editor.js?v=3";
 import { createToolbar } from "./components/toolbar.js?v=4";
 import { createViewToggle } from "./components/viewToggle.js?v=3";
 import { createLightbox } from "./components/lightbox.js?v=3";
-import { createItemDetail } from "./components/itemDetail.js?v=21";
+import { createItemDetail } from "./components/itemDetail.js?v=22";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
 import { createInstallButton } from "./components/installButton.js?v=2";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems, saveItems, uploadImage, slugify } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=8";
+import { loadAllState, startRealtime, subscribeState } from "./state.js?v=9";
 
 const editable = isLocal();
 let currentQuery = "";

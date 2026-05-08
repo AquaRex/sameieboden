@@ -89,7 +89,7 @@ export function getUpcoming(slug, now = Date.now()) {
     .sort((a, b) => Date.parse(a.period_from) - Date.parse(b.period_from));
 }
 
-// Past reservations for the "Siste lån" list.
+// Past reservations for the "Sist brukt" list.
 export async function getHistory(slug, limit = 10) {
   const { data, error } = await supabase
     .from("reservations")
@@ -118,6 +118,35 @@ export async function getAllHistory({ house = null, slug = null, limit = 500 } =
   const { data, error } = await q;
   if (error) { console.warn("getAllHistory", error); return []; }
   return data || [];
+}
+
+// Past reservations within the last `daysBack` days (default 14), newest first.
+// Used by the public "Sist brukt" line and by the upcoming calendar view.
+export async function getRecentHistory(slug, daysBack = 14, limit = 50) {
+  const cutoff = new Date(Date.now() - daysBack * 24 * 3600 * 1000).toISOString();
+  const { data, error } = await supabase
+    .from("reservations")
+    .select("*")
+    .eq("slug", slug)
+    .not("period_to", "is", null)
+    .lte("period_to", new Date().toISOString())
+    .gte("period_to", cutoff)
+    .order("period_to", { ascending: false })
+    .limit(limit);
+  if (error) { console.warn("getRecentHistory", error); return []; }
+  return data || [];
+}
+
+// Returns reservations for a slug within a +/- window around today, combining
+// past rows (fetched fresh) with the in-memory cache for current+future.
+// Intended for the upcoming calendar view (currently unused; the API is
+// stable so the calendar component can be added without further changes).
+export async function getCalendarWindow(slug, { daysBack = 14, daysAhead = 14 } = {}) {
+  const past = await getRecentHistory(slug, daysBack, 200);
+  const upcoming = getUpcoming(slug); // active + future from cache
+  const horizonMs = Date.now() + daysAhead * 24 * 3600 * 1000;
+  const futureBounded = upcoming.filter((r) => Date.parse(r.period_from) <= horizonMs);
+  return { past, upcoming: futureBounded };
 }
 
 export async function loadAllState() {

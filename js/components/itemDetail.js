@@ -5,9 +5,9 @@ import { el, clear } from "../dom.js?v=3";
 import { toast } from "../toast.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "../currentHouse.js?v=1";
 import {
-  getState, getUpcoming, subscribeState, getHistory,
+  getState, getUpcoming, subscribeState, getHistory, getRecentHistory,
   useItem, reserveBlocks, endActive, cancelReservation,
-} from "../state.js?v=8";
+} from "../state.js?v=9";
 import { createDayPicker } from "./dayPicker.js?v=1";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../util/dates.js?v=1";
@@ -44,7 +44,11 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
   const upcomingTitle = el("h3", { class: "id-section-title", textContent: "Kommende reservasjoner" });
   const upcomingList = el("ul", { class: "id-upcoming" });
 
-  const historyTitle = el("h3", { class: "id-section-title", textContent: "Siste lån", hidden: !showHistory });
+  // Public single-line "last used" — visible to everyone, but only when there
+  // is a past reservation within the last 14 days.
+  const lastUsedEl = el("p", { class: "id-last-used", hidden: true });
+
+  const historyTitle = el("h3", { class: "id-section-title", textContent: "Sist brukt", hidden: !showHistory });
   const historyList  = el("ul", { class: "id-history", hidden: !showHistory });
 
   const actionsBar = el("div", { class: "id-actions" });
@@ -71,6 +75,7 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
       el("div", { class: "id-info" }, [
         titleEl, descEl, tagsEl,
         statusRow, statusDetail,
+        lastUsedEl,
         upcomingTitle, upcomingList,
         historyTitle, historyList,
         actionsBar, pickerWrap,
@@ -233,8 +238,31 @@ export function createItemDetail({ onOpenImage, onChangeHouse, showHistory = fal
     } catch (err) { handleErr(err); }
   }
 
+  async function refreshLastUsed() {
+    if (!currentItem) return;
+    const slug = currentItem.slug;
+    const rows = await getRecentHistory(slug, 14, 1);
+    // Bail if the user opened a different item before the request resolved.
+    if (!currentItem || currentItem.slug !== slug) return;
+    const last = rows[0];
+    if (!last) {
+      lastUsedEl.hidden = true;
+      lastUsedEl.textContent = "";
+      return;
+    }
+    lastUsedEl.hidden = false;
+    lastUsedEl.replaceChildren(
+      el("span", { class: "id-last-used-label", textContent: "Sist brukt: " }),
+      el("strong", { class: "id-last-used-house", textContent: last.house || "?" }),
+      el("span", { class: "id-last-used-when", textContent: formatWhen(last.period_to) }),
+    );
+  }
+
   async function refreshHistory() {
     if (!currentItem) return;
+    // Public "Sist brukt" line \u2014 always shown when there is a past entry within
+    // the last 14 days, regardless of edit mode.
+    await refreshLastUsed();
     if (!showHistory) return;
     const rows = await getHistory(currentItem.slug, 10);
     clear(historyList);
