@@ -235,6 +235,21 @@ export async function deleteEvent(id) {
   notify();
 }
 
+// Admin: delete every event row.
+export async function deleteAllEvents() {
+  const { error } = await supabase.from("events").delete().not("id", "is", null);
+  if (error) throw error;
+  notify();
+}
+
+// Admin: delete every reservation row (current, future, and history).
+export async function deleteAllReservations() {
+  const { error } = await supabase.from("reservations").delete().not("id", "is", null);
+  if (error) throw error;
+  cache.clear();
+  notify();
+}
+
 // Admin: fetch all events across all houses, optionally filtered.
 export async function getAllEvents({ house = null, limit = 500 } = {}) {
   let q = supabase
