@@ -1,4 +1,5 @@
 import { el } from "../dom.js?v=3";
+import { getState } from "../state.js?v=7";
 
 export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
   const cardSrc = item.imageThumb || item.image;
@@ -18,6 +19,14 @@ export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
         }),
       ])
     : placeholder();
+
+  const st = getState(item.slug);
+  const statusBadge = el("span", {
+    class: `card-status card-status--${st.status}`,
+    textContent: statusBadgeText(st),
+  });
+  if (st.status === "available") statusBadge.hidden = true;
+  media.appendChild(statusBadge);
 
   const tags = el(
     "div",
@@ -78,4 +87,23 @@ export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
 
 function placeholder() {
   return el("div", { class: "card-image-wrap card-image placeholder", "aria-hidden": "true", textContent: "🛠" });
+}
+
+function statusBadgeText(st) {
+  if (st.status === "in_use") return st.holder ? `I bruk · ${st.holder}` : "I bruk";
+  if (st.status === "reserved") {
+    const who = st.holder ? ` · ${st.holder}` : "";
+    const when = st.period_from ? ` · ${shortDate(st.period_from)}` : "";
+    return `Reservert${who}${when}`;
+  }
+  return "";
+}
+
+function shortDate(iso) {
+  const d = new Date(iso);
+  if (isNaN(d)) return "";
+  const now = new Date();
+  const sameDay = d.toDateString() === now.toDateString();
+  if (sameDay) return d.toLocaleTimeString("no-NO", { hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleDateString("no-NO", { day: "numeric", month: "short" });
 }

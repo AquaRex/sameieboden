@@ -3,6 +3,7 @@
 
 import { DEFAULT_EQUIPMENT } from "./defaultData.js?v=3";
 import { uid } from "./dom.js?v=3";
+import { slugify } from "./serverApi.js?v=3";
 
 const STORAGE_KEY = "bvs.equipment.v1";
 
@@ -31,9 +32,11 @@ function clone(value) {
 }
 
 function normalize(raw) {
+  const name = String(raw.name || "").trim();
   return {
     id: raw.id || uid(),
-    name: String(raw.name || "").trim(),
+    slug: typeof raw.slug === "string" && raw.slug ? raw.slug : slugify(name),
+    name,
     description: String(raw.description || "").trim(),
     tags: Array.isArray(raw.tags)
       ? raw.tags.map((t) => String(t).trim()).filter(Boolean)
