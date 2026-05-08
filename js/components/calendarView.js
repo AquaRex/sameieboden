@@ -18,10 +18,10 @@ import {
   updateEvent,
   deleteEvent,
   subscribeState,
-} from "../state.js?v=14";
+} from "../state.js?v=15";
 import { getCurrentHouse } from "../currentHouse.js?v=1";
 import { createButton } from "./button.js?v=1";
-import { createEventEditor } from "./eventEditor.js?v=1";
+import { createEventEditor } from "./eventEditor.js?v=4";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { toast } from "../toast.js?v=1";
 
@@ -146,28 +146,28 @@ export function createCalendarView({ getItems }) {
     return items.find((it) => it.slug === slug) || null;
   }
 
-  // Returns one entry per reservation, anchored to a single day:
-  //   - Returned (period_to set): anchored on period_to (return day), kind="return"
-  //   - Future (period_from > today, not yet started): anchored on period_from, kind="future"
-  //   - Ongoing/active (no period_to yet): not shown — these aren't calendar events.
-  function reservationAnchor(r, today) {
-    const from = Date.parse(r.period_from);
-    const to = r.period_to ? Date.parse(r.period_to) : null;
-    if (to != null) {
-      return { day: startOfDayMs(to), kind: "return" };
-    }
-    if (from > today) {
-      return { day: startOfDayMs(from), kind: "future" };
-    }
-    return null;
+  // Returns one entry per reservation that overlaps the day, so a multi-day
+  // reservation appears on every day from period_from through period_to (or
+  // through today if it's still ongoing without a return date).
+  //   - kind="past":   day is before today (already returned)
+  //   - kind="active": day is today
+  //   - kind="future": day is after today
+  function reservationKindForDay(ts, today) {
+    if (ts < today) return "return";
+    if (ts === today) return "active";
+    return "future";
   }
 
   function reservationsForDay(ts) {
     const today = startOfDayMs();
     const out = [];
     for (const r of rows) {
-      const anchor = reservationAnchor(r, today);
-      if (anchor && anchor.day === ts) out.push({ row: r, kind: anchor.kind });
+      const from = startOfDayMs(Date.parse(r.period_from));
+      const to = r.period_to
+        ? startOfDayMs(Date.parse(r.period_to))
+        : Math.max(from, today); // ongoing: span through today
+      if (ts < from || ts > to) continue;
+      out.push({ row: r, kind: reservationKindForDay(ts, today) });
     }
     out.sort((a, b) => (a.row.slug || "").localeCompare(b.row.slug || ""));
     return out;

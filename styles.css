@@ -2037,34 +2037,38 @@ body.id-open { overflow: hidden; }
     background: transparent;
     justify-content: center;
   }
-  .cal-event-name { display: none; }
-  .cal-event-house {
+  .cal-event-house { display: none; }
+  .cal-event-name {
     flex: 1 1 auto;
     text-align: center;
     font-size: 0.6rem;
-    padding: 0.08rem 0;
+    padding: 0.08rem 0.15rem;
     border-radius: 5px;
     background: var(--bg);
     border: 1px solid var(--bg-deep);
     letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
-  .cal-event--today .cal-event-house,
-  .cal-event--active .cal-event-house {
+  .cal-event--today .cal-event-name,
+  .cal-event--active .cal-event-name {
     background: #b9d3b1;
     border-color: #91b88c;
     color: #233e1d;
   }
-  .cal-event--future .cal-event-house {
+  .cal-event--future .cal-event-name {
     background: #eef3fb;
     border-color: #cdd9ec;
     color: #2d4a78;
   }
-  .cal-event--return .cal-event-house {
+  .cal-event--return .cal-event-name {
     background: var(--bg);
     border-color: var(--bg-deep);
     color: var(--ink-soft);
   }
-  .cal-event--custom .cal-event-house {
+  .cal-event--custom .cal-event-name {
     background: #FFB400;
     border-color: #c98c00;
     color: #fff;
@@ -2268,3 +2272,85 @@ body.id-open { overflow: hidden; }
 
 /* Event editor sits above the calendar's own backdrop */
 .cal-form-backdrop { z-index: 300; }
+
+/* ==================== Date picker ==================== */
+.dp-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  border-radius: 14px;
+  padding: 0.6rem 0.7rem 0.7rem;
+  box-shadow: var(--shadow-btn);
+}
+.dp-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dp-month-label {
+  flex: 1 1 auto;
+  text-align: center;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.dp-nav {
+  appearance: none;
+  background: var(--bg);
+  border: 2px solid var(--bg-deep);
+  border-radius: 10px;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--ink);
+  box-shadow: var(--shadow-btn);
+}
+.dp-nav:hover { border-color: var(--ink-soft); }
+.dp-nav:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--bg-deeper); }
+.dp-nav svg { width: 1.1rem; height: 1.1rem; }
+.dp-grid { display: flex; flex-direction: column; gap: 0.3rem; }
+.dp-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.3rem;
+}
+.dp-head-cell {
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0;
+}
+.dp-pad { visibility: hidden; }
+.dp-day {
+  appearance: none;
+  font: inherit;
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  border-radius: 10px;
+  padding: 0.45rem 0;
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: var(--shadow-btn);
+  transition: transform 0.08s var(--easing), background 0.12s var(--easing), border-color 0.12s var(--easing);
+}
+.dp-day:hover { border-color: var(--ink-soft); }
+.dp-day:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--bg-deeper); }
+.dp-day.is-today { border-color: var(--ink-soft); }
+.dp-day.is-selected {
+  background: var(--accent);
+  border-color: var(--accent-deep);
+  color: #fff;
+  box-shadow: var(--shadow-btn-primary);
+}
+.dp-day.is-selected:active { box-shadow: 0 1px 0 var(--accent-deep); }

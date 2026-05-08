@@ -9,14 +9,14 @@ import { createLightbox } from "./components/lightbox.js?v=3";
 import { createItemDetail } from "./components/itemDetail.js?v=22";
 import { createHousePicker } from "./components/housePicker.js?v=1";
 import { createHouseBadge } from "./components/houseBadge.js?v=2";
-import { createCalendarView } from "./components/calendarView.js?v=11";
+import { createCalendarView } from "./components/calendarView.js?v=14";
 import { createButton } from "./components/button.js?v=1";
 import { createInstallButton } from "./components/installButton.js?v=2";
 import { confirmDialog } from "./components/confirmDialog.js?v=1";
 import { createHamburgerMenu } from "./components/hamburgerMenu.js?v=1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
 import { loadItems } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=14";
+import { loadAllState, startRealtime, subscribeState } from "./state.js?v=15";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -160,7 +160,7 @@ async function bootstrapEditable() {
     serverApiMod,
   ] = await Promise.all([
     import("../sameiebodenlocal/js/components/editor.js?v=3"),
-    import("../sameiebodenlocal/js/components/toolbar.js?v=4"),
+    import("../sameiebodenlocal/js/components/toolbar.js?v=5"),
     import("../sameiebodenlocal/js/serverWriteApi.js?v=1"),
   ]);
   const { createEditor } = editorMod;
@@ -202,16 +202,6 @@ async function bootstrapEditable() {
 
   const toolbar = createToolbar({
     onAdd: () => editor.open(null),
-    onReset: async () => {
-      const ok = await confirmDialog({
-        title: "Tilbakestill listen?",
-        message: "Dette sletter dine endringer og henter standardverdier.",
-        confirmLabel: "Tilbakestill",
-        cancelLabel: "Avbryt",
-        danger: true,
-      });
-      if (ok) store.resetToDefaults();
-    },
   });
   if (toolbarMount) toolbarMount.appendChild(toolbar.root);
 

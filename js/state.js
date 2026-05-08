@@ -195,7 +195,7 @@ export async function getEventsInWindow({ daysBack = 14, daysAhead = 14 } = {}) 
   return data || [];
 }
 
-export async function createEvent({ house, title, description, event_date, time_from, time_to }) {
+export async function createEvent({ house, title, description, event_date, time_from, time_to, created_by_house }) {
   const row = {
     house,
     title: String(title || "").trim(),
@@ -203,6 +203,7 @@ export async function createEvent({ house, title, description, event_date, time_
     event_date,
     time_from: time_from || null,
     time_to: time_to || null,
+    created_by_house: created_by_house || house || null,
   };
   const { data, error } = await supabase.from("events").insert(row).select().single();
   if (error) throw error;

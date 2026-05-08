@@ -20,6 +20,7 @@ import { el, clear } from "../dom.js?v=3";
 import { createButton } from "./button.js?v=1";
 import { createTimePicker } from "./timePicker.js?v=3";
 import { createDropdown } from "./dropdown.js?v=1";
+import { createDatePicker } from "./datePicker.js?v=1";
 
 function parseDateOnly(iso) {
   if (!iso) return Date.now();
@@ -54,7 +55,7 @@ export function createEventEditor({
     onChange: () => {},
   }) : null;
 
-  const dateInput = showDate ? el("input", { type: "date" }) : null;
+  const dateInput = showDate ? createDatePicker({ value: null }) : null;
 
   const titleInput = el("input", { type: "text", maxLength: 80, placeholder: "F.eks. Dugnad" });
   const descInput = el("textarea", { rows: 3, maxLength: 500, placeholder: "Valgfri beskrivelse" });
@@ -91,7 +92,7 @@ export function createEventEditor({
   if (showDate) {
     fields.push(el("label", { class: "ed-field" }, [
       el("span", { textContent: "Dato" }),
-      dateInput,
+      dateInput.root,
     ]));
   }
   fields.push(
@@ -149,13 +150,16 @@ export function createEventEditor({
     fellesCb.checked = initialIsFelles;
 
     if (showHouse && houseDropdown) {
-      const h = event ? event.house : getDefaultHouse() || houses[0];
-      houseDropdown.setValue(initialIsFelles ? (houses[0] || "") : (h || houses[0] || ""));
+      const creator = event && event.created_by_house;
+      const h = initialIsFelles
+        ? (creator || houses[0] || "")
+        : (event ? event.house : getDefaultHouse() || houses[0]);
+      houseDropdown.setValue(h || houses[0] || "");
       houseDropdown.setDisabled?.(initialIsFelles);
     }
 
     if (showDate && dateInput) {
-      dateInput.value = event ? event.event_date : (dateIso || new Date().toISOString().slice(0, 10));
+      dateInput.setValue(event ? event.event_date : (dateIso || new Date().toISOString().slice(0, 10)));
     } else {
       const iso = event ? event.event_date : dateIso;
       if (iso) dateLabelEl.textContent = formatNiceDate(iso);
@@ -192,7 +196,7 @@ export function createEventEditor({
     const time_from = allDay ? null : (fromPicker.getValue() || null);
     const time_to = allDay ? null : (toPicker.getValue() || null);
     const event_date = showDate
-      ? (dateInput.value || null)
+      ? (dateInput.getValue() || null)
       : (dateLabelEl.dataset.iso || null);
 
     let house;
@@ -227,6 +231,10 @@ export function createEventEditor({
     }
 
     const data = { house, title, description, event_date, time_from, time_to };
+    if (mode === "create") {
+      const creator = getDefaultHouse() || (showHouse && houseDropdown ? houseDropdown.getValue() : null);
+      if (creator) data.created_by_house = creator;
+    }
     try {
       await onSubmit({ mode, id: editingId, data });
       close();
