@@ -21,7 +21,7 @@ import {
 } from "../state.js?v=11";
 import { getCurrentHouse } from "../currentHouse.js?v=1";
 import { createButton } from "./button.js?v=1";
-import { createTimePicker } from "./timePicker.js?v=2";
+import { createTimePicker } from "./timePicker.js?v=3";
 import { confirmDialog } from "./confirmDialog.js?v=1";
 import { toast } from "../toast.js?v=1";
 

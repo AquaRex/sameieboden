@@ -69,14 +69,15 @@ export function createTimePicker({
       type: "button", class: "tp-chev tp-chev--up",
       "aria-label": `${label} opp`,
       innerHTML: CHEV_UP,
-      onclick: (e) => { e.preventDefault(); if (!disabled) onUp(); },
     });
     const downBtn = el("button", {
       type: "button", class: "tp-chev tp-chev--down",
       "aria-label": `${label} ned`,
       innerHTML: CHEV_DOWN,
-      onclick: (e) => { e.preventDefault(); if (!disabled) onDown(); },
     });
+    attachRepeat(upBtn, onUp);
+    attachRepeat(downBtn, onDown);
+
     const numWrap = el("div", {
       class: "tp-display",
       role: "spinbutton",
@@ -93,8 +94,80 @@ export function createTimePicker({
         onWheelDir(e.deltaY > 0 ? -1 : +1);
       },
     }, [numEl]);
+    attachDrag(numWrap, onUp, onDown);
+
     const cap = el("span", { class: "tp-cap", textContent: label });
     return el("div", { class: "tp-tile" }, [upBtn, numWrap, downBtn, cap]);
+  }
+
+  // Press-and-hold repeat for chevron buttons. First tick fires immediately,
+  // then accelerates after a short delay.
+  function attachRepeat(btn, fn) {
+    let timeoutId = null;
+    let intervalId = null;
+    const stop = () => {
+      if (timeoutId) { clearTimeout(timeoutId); timeoutId = null; }
+      if (intervalId) { clearInterval(intervalId); intervalId = null; }
+    };
+    const start = (e) => {
+      if (disabled) return;
+      if (e.cancelable) e.preventDefault();
+      fn();
+      timeoutId = setTimeout(() => {
+        intervalId = setInterval(() => fn(), 80);
+      }, 380);
+    };
+    btn.addEventListener("pointerdown", start);
+    btn.addEventListener("pointerup", stop);
+    btn.addEventListener("pointercancel", stop);
+    btn.addEventListener("pointerleave", stop);
+    // Prevent the synthetic click after pointerup (we already fired in start).
+    btn.addEventListener("click", (e) => e.preventDefault());
+  }
+
+  // Vertical drag/swipe inside the number display: drag up = increment,
+  // drag down = decrement. Step threshold in pixels.
+  function attachDrag(elNode, onUp, onDown) {
+    const STEP_PX = 18;
+    let active = false;
+    let startY = 0;
+    let accumulated = 0;
+    let pointerId = null;
+
+    elNode.addEventListener("pointerdown", (e) => {
+      if (disabled) return;
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      active = true;
+      pointerId = e.pointerId;
+      startY = e.clientY;
+      accumulated = 0;
+      try { elNode.setPointerCapture(pointerId); } catch (_) {}
+      elNode.classList.add("is-dragging");
+    });
+
+    elNode.addEventListener("pointermove", (e) => {
+      if (!active || e.pointerId !== pointerId) return;
+      e.preventDefault();
+      const dy = e.clientY - startY - accumulated;
+      if (Math.abs(dy) >= STEP_PX) {
+        const steps = Math.trunc(dy / STEP_PX);
+        accumulated += steps * STEP_PX;
+        for (let i = 0; i < Math.abs(steps); i++) {
+          // Drag up (negative dy) -> increment.
+          if (steps < 0) onUp(); else onDown();
+        }
+      }
+    });
+
+    const end = (e) => {
+      if (!active || (pointerId != null && e.pointerId !== pointerId)) return;
+      active = false;
+      try { elNode.releasePointerCapture(pointerId); } catch (_) {}
+      pointerId = null;
+      elNode.classList.remove("is-dragging");
+    };
+    elNode.addEventListener("pointerup", end);
+    elNode.addEventListener("pointercancel", end);
   }
 
   function bumpHour(delta) {
