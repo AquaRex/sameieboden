@@ -1,11 +1,9 @@
 // PWA install button. Shown only when the browser fires `beforeinstallprompt`
-// (Android Chrome / desktop Chromium). On iOS Safari we instead show a small
-// hint pointing users to the Share menu when they're not already running as a
-// standalone app.
+// (Android Chrome / desktop Chromium). On iOS Safari we instead show a hint
+// pointing users to the Share menu when they're not already running as a
+// standalone app. The button is persistent — only `appinstalled` hides it.
 
 import { el } from "../dom.js?v=3";
-
-const STORAGE_KEY = "sb.installDismissed";
 
 function isStandalone() {
   return (
@@ -20,22 +18,10 @@ function isIOS() {
 
 export function createInstallButton() {
   if (isStandalone()) return null;
-  if (localStorage.getItem(STORAGE_KEY) === "1") return null;
 
   let deferredPrompt = null;
 
   const label = el("span", { class: "install-label", textContent: "Installer app" });
-  const dismiss = el("button", {
-    type: "button",
-    class: "install-dismiss",
-    "aria-label": "Skjul",
-    textContent: "×",
-    onclick: (e) => {
-      e.stopPropagation();
-      hide();
-      localStorage.setItem(STORAGE_KEY, "1");
-    },
-  });
   const root = el("button", {
     type: "button",
     class: "install-btn",
@@ -44,7 +30,6 @@ export function createInstallButton() {
   }, [
     el("span", { class: "install-icon", innerHTML: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m6 9 6 6 6-6"/><path d="M5 21h14"/></svg>' }),
     label,
-    dismiss,
   ]);
 
   function show() { root.hidden = false; }
@@ -54,9 +39,7 @@ export function createInstallButton() {
     if (deferredPrompt) {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      hide();
-      if (outcome === "accepted") localStorage.setItem(STORAGE_KEY, "1");
+      if (outcome !== "accepted") deferredPrompt = null;
       return;
     }
     if (isIOS()) {
@@ -73,10 +56,8 @@ export function createInstallButton() {
   window.addEventListener("appinstalled", () => {
     deferredPrompt = null;
     hide();
-    localStorage.setItem(STORAGE_KEY, "1");
   });
 
-  // iOS has no beforeinstallprompt — show the hint button right away.
   if (isIOS()) {
     label.textContent = "Legg til på Hjem-skjerm";
     show();
