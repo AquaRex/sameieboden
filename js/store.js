@@ -1,6 +1,5 @@
-// Single source of truth for equipment data.
-// Pub/sub so any component can react to changes without
-// knowing about other components.
+// Single source of truth for equipment data. Pub/sub so components react
+// to changes without knowing about each other.
 
 import { DEFAULT_EQUIPMENT } from "./defaultData.js?v=3";
 import { uid } from "./dom.js?v=3";
@@ -23,7 +22,7 @@ function persist(items) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   } catch {
-    // Quota or private mode — ignore; in-memory state still works.
+    // Quota or private mode — in-memory state still works.
   }
 }
 

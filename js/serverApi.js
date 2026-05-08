@@ -1,6 +1,6 @@
-// Thin wrapper around the local dev server API (dev_server.py).
-// All calls are no-ops / safe failures when the server isn't running,
-// so the page still works as a static site.
+// Wrapper around the local dev server API (dev_server.py). All calls
+// fail safely when the server isn't running so the static site keeps
+// working.
 
 const API_TIMEOUT_MS = 10000;
 
@@ -42,7 +42,7 @@ export async function saveItems(items) {
 
 export async function uploadImage(slug, dataUrl) {
   const res = await request("POST", "/api/upload", { slug, dataUrl });
-  return res.path; // e.g. "images/rive.jpg"
+  return res.path;
 }
 
 export function slugify(name) {

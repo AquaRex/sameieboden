@@ -1,4 +1,4 @@
-// Local-only toolbar: add new entry, import/export JSON, reset.
+// Local-only toolbar: add, import/export JSON, reset.
 
 import { el } from "../dom.js?v=3";
 

@@ -1,6 +1,3 @@
-// Application entry point. Wires together store, components and events.
-// Each module knows as little as possible about the others.
-
 import { isLocal } from "./env.js?v=3";
 import { store } from "./store.js?v=3";
 import { filterItems } from "./search.js?v=3";
@@ -17,12 +14,10 @@ const editable = isLocal();
 let currentQuery = "";
 let currentTag = null;
 
-// --- mount points ---
 const controls = document.getElementById("controls");
 const gridSection = document.getElementById("grid-section");
 const toolbarMount = document.getElementById("toolbar-mount");
 
-// --- components ---
 const searchBar = createSearchBar({
   onChange: (q) => { currentQuery = q; rerender(); },
 });
@@ -56,10 +51,9 @@ const editor = editable
   ? createEditor({
       getKnownTags: () => store.allTags(),
       onSave: async (mode, id, data) => {
-        // If fresh images were dropped (data URLs), upload them as real files
-        // first so the public site can serve them from images/.
-        // Two sizes are kept: a high-quality "image" for the lightbox, and
-        // a small "imageThumb" used by the cards.
+        // Upload fresh data-URL images so the public site can serve them
+        // from images/. Cache-bust both URLs with the same timestamp so a
+        // replaced file doesn't get served from the browser cache.
         const cacheBust = Date.now();
         if (data.image && data.image.startsWith("data:")) {
           try {
@@ -74,7 +68,6 @@ const editor = editable
             console.warn("Image upload failed, keeping inline data URL:", err);
           }
         } else if (data.imageThumb && data.imageThumb.startsWith("data:")) {
-          // Edge case: only the thumb is fresh (shouldn't normally happen).
           try {
             const slug = slugify(data.name);
             const thumbPath = await uploadImage(`${slug}-thumb`, data.imageThumb);
@@ -89,7 +82,6 @@ const editor = editable
     })
   : null;
 
-// --- mount DOM ---
 const countRow = document.createElement("div");
 countRow.className = "count-row";
 countRow.append(grid.count, viewToggle.root);
@@ -111,20 +103,20 @@ if (editable) {
   toolbarMount.appendChild(toolbar.root);
 }
 
-// --- reactive rendering ---
 store.subscribe((items) => {
   tagFilters.setTags(store.allTags());
   rerender(items);
 });
 
-// --- bootstrap from data/items.json (source of truth for the public site) ---
+// data/items.json is the source of truth for the public site.
 let initialLoadDone = false;
 loadItems().then((items) => {
   if (items) store.replaceAll(items);
   initialLoadDone = true;
 });
 
-// --- push edits back to the dev server so they end up in git ---
+// In edit mode, persist changes back to disk via the dev server so they
+// can be committed to git.
 if (editable) {
   let saveTimer = null;
   store.subscribe(() => {
@@ -144,7 +136,6 @@ function rerender(items = store.getAll()) {
   grid.render(filtered, items.length);
 }
 
-// --- import/export ---
 function exportJson() {
   const data = JSON.stringify(store.getAll(), null, 2);
   const blob = new Blob([data], { type: "application/json" });

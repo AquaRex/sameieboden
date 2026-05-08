@@ -1,6 +1,4 @@
-// Initial seed data, used the first time the page is opened
-// and as the baseline when exporting back to a file.
-// In production, replace this with your real list.
+// Seed data used when no items.json or localStorage state exists.
 
 export const DEFAULT_EQUIPMENT = [
 

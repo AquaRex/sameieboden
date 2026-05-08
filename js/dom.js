@@ -1,5 +1,4 @@
-// Tiny DOM helpers — used everywhere so we never repeat
-// document.createElement boilerplate or manual escaping.
+// Tiny DOM helpers used across components.
 
 export function el(tag, props = {}, children = []) {
   const node = document.createElement(tag);

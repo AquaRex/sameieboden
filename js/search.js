@@ -1,4 +1,4 @@
-// Pure filtering logic — no DOM, easy to reason about and test.
+// Pure filtering logic — no DOM.
 
 export function filterItems(items, { query = "", tag = null } = {}) {
   const terms = query.toLowerCase().split(/\s+/).filter(Boolean);

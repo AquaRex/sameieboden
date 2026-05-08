@@ -1,16 +1,15 @@
 // Modal editor for adding or editing an equipment entry.
-// Self-contained: it owns its own DOM and exposes open()/close().
 
 import { el, clear } from "../dom.js?v=3";
 
-const MAX_IMAGE_BYTES = 600 * 1024; // ~600KB after compression
+const MAX_IMAGE_BYTES = 600 * 1024;
 const FULL_MAX_DIM = 1600;
 const FULL_QUALITY = 0.85;
 const THUMB_MAX_DIM = 900;
 const THUMB_QUALITY = 0.85;
 
 export function createEditor({ onSave, getKnownTags }) {
-  let mode = "add";        // "add" | "edit"
+  let mode = "add";
   let editingId = null;
   let imageDataUrl = "";       // full-size, used in lightbox
   let imageThumbDataUrl = "";  // small, used in cards
@@ -18,7 +17,6 @@ export function createEditor({ onSave, getKnownTags }) {
   let imageZoom = 1;
   let tags = [];
 
-  // ---------- inputs ----------
   const nameInput = el("input", { type: "text", id: "ed-name", required: true, autocomplete: "off" });
   const descInput = el("textarea", { id: "ed-desc", rows: 3 });
 
@@ -56,7 +54,6 @@ export function createEditor({ onSave, getKnownTags }) {
   const errorBox = el("p", { class: "ed-error", role: "alert" });
   const titleEl = el("h2", { id: "ed-title", class: "modal-title" });
 
-  // ---------- form layout ----------
   const form = el(
     "form",
     {
@@ -91,7 +88,6 @@ export function createEditor({ onSave, getKnownTags }) {
   document.body.appendChild(backdrop);
   document.addEventListener("keydown", (e) => { if (!backdrop.hidden && e.key === "Escape") close(); });
 
-  // ---------- public API ----------
   function open(item = null) {
     mode = item ? "edit" : "add";
     editingId = item?.id ?? null;
@@ -114,7 +110,6 @@ export function createEditor({ onSave, getKnownTags }) {
     backdrop.hidden = true;
   }
 
-  // ---------- internals ----------
   function field(label, input) {
     return el("label", { class: "ed-field" }, [el("span", { textContent: label }), input]);
   }
@@ -149,7 +144,7 @@ export function createEditor({ onSave, getKnownTags }) {
       );
     }
 
-    // Suggestions: existing tags not yet on this item.
+    // Suggestions: known tags not already on this item.
     clear(knownTagsBox);
     const remaining = getKnownTags().filter((t) => !tags.includes(t));
     if (remaining.length === 0) return;
@@ -179,7 +174,6 @@ export function createEditor({ onSave, getKnownTags }) {
       return;
     }
 
-    // Drop zone: small thumbnail + replace hint.
     dropZone.appendChild(el("img", { class: "ed-preview", src: imageDataUrl, alt: "" }));
     dropZone.appendChild(
       el("p", { class: "ed-drop-hint", textContent: "Dra et nytt bilde hit, eller klikk for å bytte." })
@@ -190,25 +184,25 @@ export function createEditor({ onSave, getKnownTags }) {
   }
 
   function buildCropper() {
-    // Square frame; the image inside is dragged to choose the visible crop,
-    // and zoomed via slider / wheel / pinch. The result is stored as
+    // Square frame; the image inside is dragged to choose the visible crop
+    // and zoomed via slider, wheel or pinch. The result is stored as
     // `imagePos` (% %) + `imageZoom` (>=1) which the card renderer applies
     // with object-position + transform-origin + scale, matching this preview.
     const frame = el("div", { class: "ed-crop" });
     const img = el("img", {
       class: "ed-crop-img",
-      // Prefer the compressed thumbnail so the preview matches what the
-      // card will actually show (same resolution + JPEG artifacts).
+      // Use the compressed thumbnail so the preview matches what the
+      // card will actually render (same resolution + JPEG artifacts).
       src: imageThumbDataUrl || imageDataUrl,
       alt: "",
       draggable: false,
     });
     frame.appendChild(img);
 
-    let imgRatio = 1;       // natural width / height
-    let frameSize = 0;      // px
+    let imgRatio = 1;
+    let frameSize = 0;
     let baseW = 0, baseH = 0; // cover-fit base size at zoom=1
-    let tx = 0, ty = 0;     // translation in px relative to centered
+    let tx = 0, ty = 0;       // translation in px relative to centered
 
     function recomputeBase() {
       frameSize = frame.getBoundingClientRect().width;
@@ -220,7 +214,7 @@ export function createEditor({ onSave, getKnownTags }) {
         baseW = frameSize;
         baseH = frameSize / imgRatio;
       }
-      // Convert stored imagePos % into pixel translation at current zoom.
+      // Convert stored imagePos % into pixel translation at the current zoom.
       const [xStr, yStr] = imagePos.split(/\s+/);
       const xp = parseFloat(xStr); const yp = parseFloat(yStr);
       const xpClamped = isFinite(xp) ? xp : 50;
@@ -252,7 +246,6 @@ export function createEditor({ onSave, getKnownTags }) {
       const z = Math.max(1, Math.min(4, next));
       if (anchor && frameSize) {
         // Keep the point under the cursor stable when zooming.
-        // Image-space coord under anchor = (anchor - frameCenter - t) / oldZoom * newZoom
         const cx = frameSize / 2;
         const cy = frameSize / 2;
         const ax = anchor.x - cx;
@@ -272,7 +265,7 @@ export function createEditor({ onSave, getKnownTags }) {
     });
     if (img.complete && img.naturalWidth) {
       imgRatio = img.naturalWidth / img.naturalHeight;
-      // Defer until frame is in DOM and has a size.
+      // Wait for the frame to be in the DOM and measurable.
       requestAnimationFrame(recomputeBase);
     }
 
@@ -304,7 +297,7 @@ export function createEditor({ onSave, getKnownTags }) {
     frame.addEventListener("pointerup", stopDrag);
     frame.addEventListener("pointercancel", stopDrag);
 
-    // Wheel to zoom (anchored at cursor).
+    // Wheel to zoom, anchored at the cursor.
     frame.addEventListener("wheel", (e) => {
       e.preventDefault();
       const rect = frame.getBoundingClientRect();
@@ -313,12 +306,10 @@ export function createEditor({ onSave, getKnownTags }) {
       setZoom(imageZoom * factor, anchor);
     }, { passive: false });
 
-    // Recompute layout if frame size changes.
     if (typeof ResizeObserver !== "undefined") {
       new ResizeObserver(() => recomputeBase()).observe(frame);
     }
 
-    // Zoom slider.
     const zoomSlider = el("input", {
       type: "range",
       min: "1",
@@ -390,8 +381,8 @@ export function createEditor({ onSave, getKnownTags }) {
       return;
     }
     try {
-      // Generate two sizes from the same source: a high-quality "full" image
-      // for the lightbox, and a small thumbnail for the cards.
+      // Two sizes from the same source: a high-quality "full" image for the
+      // lightbox, and a smaller thumbnail used by the cards.
       imageDataUrl = await compressImage(file, FULL_MAX_DIM, FULL_QUALITY);
       if (imageDataUrl.length > MAX_IMAGE_BYTES * 5) {
         // Very large source — step down quality to keep storage reasonable.
@@ -405,12 +396,6 @@ export function createEditor({ onSave, getKnownTags }) {
     } catch (err) {
       errorBox.textContent = "Kunne ikke lese bildet: " + err.message;
     }
-  }
-
-  function setImagePos(xPct, yPct) {
-    const x = Math.max(0, Math.min(100, xPct));
-    const y = Math.max(0, Math.min(100, yPct));
-    imagePos = `${x.toFixed(1)}% ${y.toFixed(1)}%`;
   }
 
   function submit() {
@@ -434,8 +419,6 @@ export function createEditor({ onSave, getKnownTags }) {
 
   return { open, close };
 }
-
-// ---------- helpers ----------
 
 function wireDropZone(zone, fileInput, onFile) {
   zone.addEventListener("click", (e) => {

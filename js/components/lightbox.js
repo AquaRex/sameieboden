@@ -1,5 +1,4 @@
-// Full-image lightbox. Opens a modal showing item.image at full size,
-// with prev/next navigation via on-screen buttons or arrow keys.
+// Full-image lightbox with prev/next navigation.
 
 import { el, clear } from "../dom.js?v=3";
 
@@ -35,9 +34,9 @@ export function createLightbox() {
 
   const stage = el("div", { class: "lb-stage" }, [imgEl]);
 
-  // Close when the user clicks anywhere outside the image and outside the
-  // on-screen controls (prev/next/close). The image itself swallows the
-  // click so you can still pan the cursor over it without dismissing.
+  // Clicks anywhere outside the image and the controls dismiss the
+  // lightbox; the image itself swallows clicks so the cursor can move
+  // over it without closing.
   imgEl.addEventListener("click", (e) => e.stopPropagation());
 
   const backdrop = el(
