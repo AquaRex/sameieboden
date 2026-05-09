@@ -4,13 +4,13 @@ export function friendlyError(err) {
   const msg = (err && (err.message || err.error_description || err.hint)) || "";
   const code = err && err.code;
   if (code === "42703" || /column .* does not exist/i.test(msg)) {
-    return "Databasen mangler en kolonne. Kjør den nyeste SQL-migreringen i Supabase.";
+    return "Databasen mangler kolonnen";
   }
   if (code === "42P01" || /relation .* does not exist/i.test(msg)) {
-    return "Databasetabellen finnes ikke ennå. Kjør oppsetts-SQL-en i Supabase.";
+    return "Databasetabellen finnes ikke";
   }
   if (code === "PGRST301" || /jwt|permission|rls/i.test(msg)) {
-    return "Manglende tilgang til databasen. Sjekk Row Level Security i Supabase.";
+    return "Manglende tilgang til databasen";
   }
   if (!navigator.onLine) {
     return "Du er offline. Endringer lagres ikke før du er tilkoblet igjen.";

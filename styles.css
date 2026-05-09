@@ -231,32 +231,70 @@ button { font-family: inherit; }
 
 .view-toggle {
   display: inline-flex;
-  border: 2px solid var(--bg-deep);
-  border-radius: var(--radius-pill);
-  background: var(--surface);
-  padding: 4px;
-  gap: 2px;
-  box-shadow: var(--shadow-btn);
+  gap: 0;
+  background: transparent;
+  border: none;
+  padding: 0;
+  box-shadow: none;
 }
 .view-btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
   padding: 0.4rem 0.85rem;
-  background: transparent;
-  border: none;
-  color: var(--ink-soft);
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  color: var(--ink);
   cursor: pointer;
-  border-radius: var(--radius-pill);
+  border-radius: 0;
   font: inherit;
   font-weight: 700;
-  transition: background 0.12s var(--easing), color 0.12s var(--easing);
+  /* The raised button sits at y=0 with a 4px drop-shadow extending down to y=4.
+     The pressed button translates down by exactly 4px with no drop-shadow, so
+     its bottom edge lands at the same y as the raised button's shadow base. */
+  box-shadow: 0 4px 0 var(--bg-deeper);
+  transition: transform 0.08s var(--easing),
+              background 0.12s var(--easing),
+              border-color 0.12s var(--easing),
+              color 0.12s var(--easing),
+              box-shadow 0.08s var(--easing);
 }
-.view-btn:hover { color: var(--ink); }
+.view-btn:first-child {
+  border-top-left-radius: var(--radius-pill);
+  border-bottom-left-radius: var(--radius-pill);
+}
+.view-btn:last-child {
+  border-top-right-radius: var(--radius-pill);
+  border-bottom-right-radius: var(--radius-pill);
+}
+.view-btn + .view-btn { margin-left: -2px; }
+.view-btn:focus { outline: none; }
+.view-btn:focus-visible { outline: 2px solid var(--accent-deep); outline-offset: 2px; }
+@media (hover: hover) {
+  .view-btn:hover:not([aria-pressed="true"]) { border-color: var(--ink-soft); z-index: 2; }
+}
+.view-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--bg-deeper); }
 .view-btn[aria-pressed="true"] {
-  background: var(--accent);
+  /* Border + outer shape stay identical to the raised button. The green fill
+     is rendered as an inset pill via ::before, leaving a small gap of the
+     surface color between the border and the colored fill. */
   color: #fff;
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 transparent;
+  z-index: 0;
 }
+.view-btn[aria-pressed="true"]::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+  z-index: -1;
+}
+/* Raised (non-pressed) sibling renders above the pressed one so its border
+   visually overlaps the pressed button's edge. */
+.view-btn[aria-pressed="false"] { z-index: 1; }
 .view-btn-icon { display: inline-flex; align-items: center; justify-content: center; }
 .view-btn-icon svg { width: 14px; height: 14px; fill: currentColor; display: block; }
 .view-btn-label { font-size: 0.85rem; }

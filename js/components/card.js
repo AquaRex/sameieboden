@@ -92,9 +92,9 @@ function placeholder() {
 function statusBadgeText(st) {
   if (st.status === "in_use") return st.holder ? `I bruk · ${st.holder}` : "I bruk";
   if (st.status === "reserved") {
-    const who = st.holder ? ` · ${st.holder}` : "";
     const when = st.period_from ? ` · ${shortDate(st.period_from)}` : "";
-    return `Reservert${who}${when}`;
+    const who = st.holder ? ` · ${st.holder}` : "";
+    return `Reservert${when}${who}`;
   }
   return "";
 }
