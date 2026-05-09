@@ -227,9 +227,13 @@
   .chat-win {
     right: 0.75rem;
     left: 0.75rem;
-    bottom: 0.75rem;
+    /* Lift above the on-screen keyboard. --chat-kb is set from JS via the
+       visualViewport API; falls back to 0 when the keyboard is closed. */
+    bottom: calc(0.75rem + var(--chat-kb, 0px));
     width: auto;
     max-width: none;
-    height: min(80vh, 600px);
+    /* Use dvh so the sheet shrinks when mobile browser chrome appears. */
+    height: min(80dvh, 600px);
+    max-height: calc(100dvh - var(--chat-kb, 0px) - 1.5rem);
   }
 }

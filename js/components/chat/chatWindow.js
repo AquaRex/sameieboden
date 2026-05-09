@@ -261,6 +261,7 @@ export function createChatWindow({ onClose } = {}) {
     isOpen = true;
     root.hidden = false;
     requestAnimationFrame(() => root.classList.add("is-shown"));
+    startViewportTracking();
 
     refreshPushButton();
     refreshRecipientUnread();
@@ -288,8 +289,32 @@ export function createChatWindow({ onClose } = {}) {
     root.classList.remove("is-shown");
     // Match the CSS transition before hiding completely.
     setTimeout(() => { if (!isOpen) root.hidden = true; }, 180);
+    stopViewportTracking();
     if (unsubChat) { unsubChat(); unsubChat = null; }
     onClose?.();
+  }
+
+  // Track the visualViewport so the window can lift above an open mobile
+  // keyboard. Sets --chat-kb (px) on the root which CSS uses as bottom offset.
+  function updateViewport() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    root.style.setProperty("--chat-kb", kb + "px");
+  }
+  function startViewportTracking() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    vv.addEventListener("resize", updateViewport);
+    vv.addEventListener("scroll", updateViewport);
+    updateViewport();
+  }
+  function stopViewportTracking() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    vv.removeEventListener("resize", updateViewport);
+    vv.removeEventListener("scroll", updateViewport);
+    root.style.removeProperty("--chat-kb");
   }
 
   function toggle() { isOpen ? close() : open(); }
