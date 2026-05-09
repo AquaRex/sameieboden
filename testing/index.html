@@ -6,35 +6,31 @@
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta name="theme-color" content="#fdfbe5" />
-  <title>Sameieboden</title>
-  <meta name="description" content="Oversikt over felles utstyr og verktøy i Bedehusvegen Sameie." />
+  <title>Sameieboden · Testing</title>
+  <meta name="description" content="Staging-versjon av Sameieboden med chat under utvikling." />
+  <meta name="robots" content="noindex" />
+
+  <!-- Resolve all relative URLs against the site root so this page loads the
+       same JS/CSS/manifest as the production index. -->
+  <base href="/">
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
-  
+
   <!-- iOS home-screen install -->
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Sameieboden" />
+  <meta name="apple-mobile-web-app-title" content="Sameieboden test" />
   <meta name="mobile-web-app-capable" content="yes" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="styles/main.css?v=1" />
-
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "wo1o3tn6rc");
-  </script>
 </head>
 <body>
   <section class="hero">
@@ -65,17 +61,13 @@
         <p class="footer-title">Mangler noe i listen?</p>
         <p class="footer-text">Ta kontakt med Thomas Hetland</p>
       </div>
-      <p class="footer-meta">Bedehusvegen Sameie</p>
+      <p class="footer-meta">Bedehusvegen Sameie · staging</p>
       <p class="footer-meta">© Thomas Hetland</p>
     </div>
   </footer>
 
   <script type="module" src="js/main.js?v=1"></script>
   <script>
-    // Service worker for PWA install + offline support.
-    // (Previously disabled on localhost; enabled now so push notifications
-    // can be tested locally. Use Application → Service Workers in DevTools
-    // to unregister if dev edits are getting cached.)
     if ("serviceWorker" in navigator && location.protocol !== "file:") {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("sw.js").catch(() => {});

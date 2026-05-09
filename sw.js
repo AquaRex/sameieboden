@@ -13,7 +13,7 @@
  *     query strings still hit the precached entries.
  *   - Bump CACHE_VERSION on any deploy that needs forced eviction.
  */
-const CACHE_VERSION = "v88";
+const CACHE_VERSION = "v103";
 const STATIC_CACHE = `sb-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `sb-runtime-${CACHE_VERSION}`;
 
@@ -56,6 +56,8 @@ const APP_SHELL = [
   "./styles/components/items/item-detail.css",
   "./styles/components/calendar/calendar.css",
   "./styles/components/calendar/event-editor.css",
+  "./styles/components/chat/chat.css",
+  "./styles/components/chat/message-bubble.css",
 
   // Public JS modules. Admin/local-only modules are not precached.
   "./js/main.js",
@@ -90,6 +92,12 @@ const APP_SHELL = [
   "./js/components/items/itemDetail.js",
   "./js/components/calendar/calendarView.js",
   "./js/components/calendar/eventEditor.js",
+  "./js/components/chat/chatLauncher.js",
+  "./js/components/chat/chatWindow.js",
+  "./js/components/chat/messageBubble.js",
+  "./js/components/chat/chatInput.js",
+  "./js/core/chat.js",
+  "./js/core/push.js",
 ];
 
 self.addEventListener("install", (event) => {
@@ -192,5 +200,48 @@ self.addEventListener("fetch", (event) => {
           return res;
         })
     )
+  );
+});
+
+// ---------------------------------------------------------------------------
+// Web Push — display a notification when a chat message arrives. Payload
+// is JSON: { from, to, body }. `to` is null for broadcast messages.
+// ---------------------------------------------------------------------------
+self.addEventListener("push", (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
+
+  const from = data.from || "Nabo";
+  const isBroadcast = data.to == null;
+  const title = isBroadcast
+    ? `Alle hus · ${from}`
+    : `Melding fra ${from}`;
+  const body = (data.body || "").slice(0, 220);
+
+  event.waitUntil(
+    self.registration.showNotification(title, {
+      body,
+      icon: "./icons/icon-192.png",
+      badge: "./icons/icon-192.png",
+      tag: isBroadcast ? "chat-all" : `chat-${from}`,
+      renotify: true,
+      data: { from, to: data.to },
+    })
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((wins) => {
+      for (const w of wins) {
+        if (w.url.includes(self.registration.scope)) {
+          w.focus();
+          w.postMessage({ type: "open-chat", from: event.notification.data?.from });
+          return;
+        }
+      }
+      return self.clients.openWindow("./");
+    })
   );
 });

@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Chat bubbles — Animal Crossing speech-balloon styling
+   ========================================================================== */
+
+.chat-bubble {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 78%;
+  gap: 0.2rem;
+}
+
+.chat-bubble--own       { align-self: flex-end;   align-items: flex-end; }
+.chat-bubble--incoming  { align-self: flex-start; align-items: flex-start; }
+.chat-bubble--broadcast { align-self: flex-start; align-items: flex-start; }
+
+.chat-bubble-house {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding: 0 0.5rem;
+}
+
+.chat-bubble-body {
+  margin: 0;
+  padding: 0.6rem 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink);
+  background: var(--surface);
+  border: 2px solid var(--bg-deep);
+  border-radius: 18px;
+  box-shadow: 0 3px 0 var(--bg-deeper);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.chat-bubble--own .chat-bubble-body {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent-deep);
+  border-bottom-right-radius: 8px;
+  box-shadow: 0 3px 0 var(--accent-deep);
+}
+
+.chat-bubble--incoming .chat-bubble-body {
+  border-bottom-left-radius: 8px;
+}
+
+.chat-bubble--broadcast .chat-bubble-body {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  border-bottom-left-radius: 8px;
+}
+
+.chat-bubble-time {
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding: 0 0.5rem;
+}

@@ -14,6 +14,15 @@ import { createButton } from "./components/interactives/button.js?v=1";
 import { createInstallButton } from "./components/interactives/installButton.js?v=1";
 import { confirmDialog } from "./components/overlays/confirmDialog.js?v=1";
 import { createHamburgerMenu } from "./components/interactives/hamburgerMenu.js?v=1";
+import { createChatLauncher } from "./components/chat/chatLauncher.js?v=1";
+import { createChatWindow } from "./components/chat/chatWindow.js?v=1";
+
+// Chat is currently a staging feature — only enabled on the /testing/ path
+// or when developing locally. Production root visitors don't see it.
+const CHAT_ENABLED =
+  /\/testing(\/|$)/.test(location.pathname) ||
+  location.hostname === "localhost" ||
+  location.hostname === "127.0.0.1";
 import { getCurrentHouse, subscribeCurrentHouse } from "./core/currentHouse.js?v=1";
 import { loadItems } from "./core/serverApi.js?v=1";
 import { loadAllState, startRealtime, subscribeState } from "./core/state.js?v=1";
@@ -96,6 +105,7 @@ searchRow.append(searchBar.root);
 
 const hamMenu = createHamburgerMenu({ ariaLabel: "Meny" });
 hamMenu.panel.append(calendarButton.root);
+
 const hamMount = document.getElementById("ham-mount");
 if (hamMount) hamMount.appendChild(hamMenu.root);
 
@@ -107,6 +117,23 @@ if (installButton) {
   const mount = document.getElementById("install-mount");
   if (mount) mount.appendChild(installButton.root);
 }
+
+// Floating chat: launcher (bottom-right) + Messenger-style window.
+// Only mounted on the /testing/ staging path (or localhost dev) so the
+// production root site stays unchanged while chat is being tested.
+if (CHAT_ENABLED) {
+  const chatWindow = createChatWindow({
+    onClose: () => chatLauncher.setActive(false),
+  });
+  const chatLauncher = createChatLauncher({
+    onToggle: () => {
+      chatWindow.toggle();
+      chatLauncher.setActive(chatWindow.isOpen);
+    },
+  });
+  document.body.appendChild(chatLauncher.root);
+}
+
 controls.append(searchRow, tagFilters.root, countRow);
 gridSection.append(grid.list, grid.empty);
 

@@ -42,6 +42,10 @@
 @import "components/calendar/calendar.css";
 @import "components/calendar/event-editor.css";
 
+/* Chat feature */
+@import "components/chat/chat.css";
+@import "components/chat/message-bubble.css";
+
 /* Admin page */
 @import "components/admin/admin.css";
 @import "components/admin/admin-tabs.css";
