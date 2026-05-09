@@ -279,8 +279,12 @@ button { font-family: inherit; }
 .items--grid {
   display: grid;
   gap: 1.4rem;
-  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
 }
+/* Prevent a single grid column from stretching into a giant card on
+   narrow-but-not-mobile widths. Cards stay capped; grid mode never turns
+   into a vertical line of oversized cards — for that, use list view. */
+.items--grid > .card { max-width: 360px; justify-self: center; width: 100%; }
 .items--list {
   display: flex;
   flex-direction: column;
@@ -437,7 +441,7 @@ button { font-family: inherit; }
 }
 
 @media (max-width: 480px) {
-  .items--grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1rem; }
+  .items--grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
   .items--list .card-image-wrap { flex-basis: 100px; width: 100px; }
 }
 
