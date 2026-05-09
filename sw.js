@@ -13,7 +13,7 @@
  *     query strings still hit the precached entries.
  *   - Bump CACHE_VERSION on any deploy that needs forced eviction.
  */
-const CACHE_VERSION = "v106";
+const CACHE_VERSION = "v107";
 const STATIC_CACHE = `sb-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `sb-runtime-${CACHE_VERSION}`;
 

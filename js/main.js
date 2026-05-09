@@ -17,12 +17,15 @@ import { createHamburgerMenu } from "./components/interactives/hamburgerMenu.js?
 import { createChatLauncher } from "./components/chat/chatLauncher.js?v=1";
 import { createChatWindow } from "./components/chat/chatWindow.js?v=1";
 
-// Chat is currently a staging feature — only enabled on the /testing/ path
-// or when developing locally. Production root visitors don't see it.
-const CHAT_ENABLED =
-  /\/testing(\/|$)/.test(location.pathname) ||
-  location.hostname === "localhost" ||
-  location.hostname === "127.0.0.1";
+// ---------------------------------------------------------------------------
+// CHAT FEATURE FLAG
+// ---------------------------------------------------------------------------
+// The chat (with Web Push) is built and ready, but currently disabled in
+// production. Flip this to `true` to roll it out to all visitors. Everything
+// else (Supabase tables, Edge Function, service worker push handler, admin
+// "Meldinger" tab) is already wired up and will start working immediately.
+// ---------------------------------------------------------------------------
+const CHAT_ENABLED = false;
 import { getCurrentHouse, subscribeCurrentHouse } from "./core/currentHouse.js?v=1";
 import { loadItems } from "./core/serverApi.js?v=1";
 import { loadAllState, startRealtime, subscribeState } from "./core/state.js?v=1";
