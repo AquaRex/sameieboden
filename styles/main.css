@@ -1,0 +1,47 @@
+/* ==========================================================================
+   Sameieboden — main stylesheet
+   This is the single entry point referenced by index.html and admin.html.
+   It loads all partials in cascade order: base → layout → utilities →
+   components (interactives, forms, overlays, items, calendar, admin).
+   ========================================================================== */
+
+@import "base.css";
+@import "layout.css";
+@import "utilities.css";
+
+/* Interactive primitives */
+@import "components/interactives/button.css";
+@import "components/interactives/icon-button.css";
+@import "components/interactives/tag-chip.css";
+@import "components/interactives/view-toggle.css";
+@import "components/interactives/house-badge.css";
+@import "components/interactives/hamburger.css";
+@import "components/interactives/install-button.css";
+
+/* Form controls */
+@import "components/forms/search-bar.css";
+@import "components/forms/dropdown.css";
+@import "components/forms/date-picker.css";
+@import "components/forms/time-picker.css";
+@import "components/forms/day-picker.css";
+@import "components/forms/editor-fields.css";
+
+/* Overlays / dialogs */
+@import "components/overlays/modal.css";
+@import "components/overlays/lightbox.css";
+@import "components/overlays/toast.css";
+@import "components/overlays/confirm-dialog.css";
+@import "components/overlays/house-picker.css";
+
+/* Item-specific */
+@import "components/items/grid.css";
+@import "components/items/card.css";
+@import "components/items/item-detail.css";
+
+/* Calendar feature */
+@import "components/calendar/calendar.css";
+@import "components/calendar/event-editor.css";
+
+/* Admin page */
+@import "components/admin/admin.css";
+@import "components/admin/admin-tabs.css";

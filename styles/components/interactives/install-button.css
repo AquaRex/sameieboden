@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Install button — PWA "Install app" prompt button
+   ========================================================================== */
+
+.install-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--accent);
+  color: #fff;
+  border: 2px solid var(--accent-deep);
+  border-radius: var(--radius-pill);
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-btn-primary);
+  transition: transform var(--duration-press) ease;
+}
+.install-btn:hover { background: var(--accent-deep); }
+.install-btn:active { transform: translateY(2px); box-shadow: var(--shadow-btn-press-primary); }
+.install-icon {
+  display: inline-flex;
+  width: 1.05rem;
+  height: 1.05rem;
+}
+.install-icon svg { width: 100%; height: 100%; }

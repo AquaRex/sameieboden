@@ -1,0 +1,99 @@
+/* ==========================================================================
+   Base — design tokens, reset, global typography
+   Palette: cream #fdfbe5 / sand #ebe1c9 / ink #8b8274
+   ========================================================================== */
+
+:root {
+  /* Surfaces */
+  --bg:           #fdfbe5;
+  --bg-deep:      #ebe1c9;
+  --bg-deeper:    #ddd1b3;
+  --surface:      #ffffff;
+  --surface-2:    #fdfbe5;
+
+  /* Text */
+  --ink:          #5a5347;
+  --ink-soft:     #8b8274;
+  --muted:        #a59c8a;
+
+  /* Accents */
+  --accent:       #7fb886;
+  --accent-deep:  #5b9d6b;
+  --accent-soft:  #e1f0dd;
+  --accent-ink:   #3a6a44;
+
+  /* Status colors */
+  --warn:         #d97777;
+  --warn-soft:    #fae3df;
+  --reserved:     #d9a445;
+  --reserved-soft:#f6e4b8;
+
+  /* Cartoony chunky shadows */
+  --shadow-card:        0 4px 0 var(--bg-deeper), 0 8px 18px rgba(139, 130, 116, 0.18);
+  --shadow-card-hover:  0 6px 0 var(--bg-deeper), 0 14px 28px rgba(139, 130, 116, 0.24);
+  --shadow-pop:         0 6px 0 rgba(139, 130, 116, 0.25), 0 12px 28px rgba(139, 130, 116, 0.18);
+  --shadow-btn:         0 3px 0 var(--bg-deeper);
+  --shadow-btn-primary: 0 3px 0 var(--accent-deep);
+  --shadow-btn-press:        0 1px 0 var(--bg-deeper);
+  --shadow-btn-press-primary:0 1px 0 var(--accent-deep);
+
+  /* Geometry */
+  --radius:       22px;
+  --radius-sm:    14px;
+  --radius-pill:  999px;
+
+  /* Layout */
+  --container:    1180px;
+
+  /* Motion */
+  --easing:           cubic-bezier(.2, .8, .2, 1);
+  --duration-press:   0.05s;
+  --duration-quick:   0.08s;
+  --duration-color:   0.12s;
+  --duration-hover:   0.15s;
+  --duration-card:    0.18s;
+  --duration-toast:   0.22s;
+
+  /* Reusable transition stacks */
+  --transition-btn:
+    transform   var(--duration-quick) var(--easing),
+    background  var(--duration-color) var(--easing),
+    border-color var(--duration-color) var(--easing),
+    color       var(--duration-color) var(--easing),
+    box-shadow  var(--duration-quick) var(--easing);
+}
+
+/* Reset */
+* { box-sizing: border-box; }
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink-soft);
+  font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-weight: 600;
+  line-height: 1.5;
+  min-height: 100%;
+
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(235, 225, 201, 0.55), transparent 38%),
+    radial-gradient(circle at 88% 92%, rgba(235, 225, 201, 0.55), transparent 42%);
+  background-attachment: fixed;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a { color: inherit; }
+img { display: block; }
+button { font-family: inherit; }
+
+::selection { background: var(--accent-soft); color: var(--accent-ink); }

@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Icon button — circular small action button
+   ========================================================================== */
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-deep);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--ink-soft);
+  box-shadow: var(--shadow-btn);
+  transition: transform var(--duration-quick) var(--easing),
+              color var(--duration-color) var(--easing);
+}
+.icon-btn:hover { color: var(--ink); }
+.icon-btn:active { transform: translateY(2px); box-shadow: var(--shadow-btn-press); }
+.icon-btn--danger { color: var(--warn); }
+.icon-btn--danger:hover { background: var(--warn); color: #fff; border-color: #c25c5c; }

@@ -1,0 +1,33 @@
+/* ==========================================================================
+   Tag chip — pill-shaped filter button
+   ========================================================================== */
+
+.tag-chip {
+  border: 2px solid var(--bg-deep);
+  background: var(--surface);
+  color: var(--ink-soft);
+  padding: 0.4rem 0.95rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  box-shadow: var(--shadow-btn);
+  transition: var(--transition-btn);
+}
+.tag-chip:hover { border-color: var(--ink-soft); color: var(--ink); }
+.tag-chip:active { transform: translateY(2px); box-shadow: var(--shadow-btn-press); }
+.tag-chip.active {
+  background: var(--accent);
+  border-color: var(--accent-deep);
+  color: #fff;
+  box-shadow: var(--shadow-btn-primary);
+}
+.tag-chip.active:active { box-shadow: var(--shadow-btn-press-primary); }
+.tag-chip--small { padding: 0.25rem 0.7rem; font-size: 0.78rem; }
+
+.tag-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}

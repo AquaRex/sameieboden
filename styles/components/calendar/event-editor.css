@@ -1,0 +1,56 @@
+/* ==========================================================================
+   Event editor — calendar event create/edit form (used inside calendar)
+   ========================================================================== */
+
+.cal-form-dialog {
+  max-width: 460px;
+  padding: 1.4rem 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.cal-form-title { margin: 0; text-align: center; }
+.cal-form-date { margin: 0 0 0.4rem; text-align: center; color: var(--muted); font-weight: 600; }
+.cal-form-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+/* Time-range row in event form */
+.cal-form-time-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cal-form-time-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  user-select: none;
+}
+.cal-form-time-toggle input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent-deep); }
+.cal-form-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1.2rem;
+  align-items: center;
+  justify-content: space-between;
+}
+.cal-form-time-pickers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem;
+  align-items: end;
+}
+.cal-form-time-col { display: flex; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.cal-form-time-col > span {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* Event editor sits above the calendar's own backdrop */
+.cal-form-backdrop { z-index: 300; }
+
+@media (max-width: 480px) {
+  .cal-form-time-pickers { gap: 0.5rem; }
+}

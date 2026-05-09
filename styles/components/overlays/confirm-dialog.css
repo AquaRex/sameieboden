@@ -1,0 +1,17 @@
+/* ==========================================================================
+   Confirm dialog — small yes/no modal (uses .modal-backdrop + .modal)
+   ========================================================================== */
+
+.cf-dialog {
+  padding: 1.5rem 1.25rem !important;
+  max-width: 420px;
+}
+.cf-title { margin: 0 0 0.5rem; text-align: center; }
+.cf-message {
+  margin: 0 0 1.1rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.cf-actions { margin-top: 0; }

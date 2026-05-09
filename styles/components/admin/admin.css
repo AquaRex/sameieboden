@@ -1,0 +1,84 @@
+/* ==========================================================================
+   Admin page — toolbar, filters, table
+   ========================================================================== */
+
+.admin-toolbar {
+  display: flex;
+  justify-content: flex-start;
+  margin: 0 0 1rem;
+}
+.admin-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+  margin: 0 0 1rem;
+}
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.admin-field-label {
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.admin-input {
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  min-width: 10rem;
+}
+.admin-summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.admin-table-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--bg-deeper);
+  border-radius: 14px;
+  background: #fff;
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.admin-table th,
+.admin-table td {
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--bg-deeper);
+}
+.admin-table thead th {
+  background: var(--bg);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  color: var(--ink-soft);
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
+.admin-table tbody tr:hover { background: var(--bg); }
+.admin-th-actions, .admin-td-actions { width: 2.5rem; text-align: right; }
+.admin-empty {
+  padding: 2rem;
+  text-align: center;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.admin-td-desc { max-width: 24rem; white-space: pre-wrap; word-break: break-word; }
+
+@media (max-width: 600px) {
+  .admin-input { min-width: 0; width: 100%; }
+  .admin-field { flex: 1 1 100%; }
+}

@@ -1,0 +1,41 @@
+/* ==========================================================================
+   Items grid + list view containers
+   ========================================================================== */
+
+.grid-section { margin-top: 1rem; }
+
+.items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.items--grid {
+  display: grid;
+  gap: 1.4rem;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+/* Prevent a single grid column from stretching into a giant card on
+   narrow-but-not-mobile widths. Cards stay capped; grid mode never turns
+   into a vertical line of oversized cards — for that, use list view. */
+.items--grid > .card { max-width: 360px; justify-self: center; width: 100%; }
+.items--list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  color: var(--ink-soft);
+  padding: 4rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  background: var(--surface);
+  border: 2px dashed var(--bg-deep);
+  border-radius: var(--radius);
+}
+
+@media (max-width: 480px) {
+  .items--grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; }
+}

@@ -3,14 +3,14 @@
  * Cache-first for static assets (CSS, JS, images, icons).
  * Bump CACHE_VERSION when you ship a major change to force eviction.
  */
-const CACHE_VERSION = "v86";
+const CACHE_VERSION = "v87";
 const STATIC_CACHE = `sb-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `sb-runtime-${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
   "./",
   "./index.html",
-  "./styles.css",
+  "./styles/main.css",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",

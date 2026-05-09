@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Modal — generic backdrop + dialog shell (used by item editor)
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(90, 83, 71, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  overflow-y: auto;
+  z-index: 100;
+  backdrop-filter: blur(3px);
+}
+.modal-backdrop[hidden] { display: none; }
+.modal {
+  background: var(--surface);
+  border-radius: 26px;
+  border: 2px solid var(--bg-deep);
+  box-shadow: 0 8px 0 var(--bg-deeper), 0 24px 60px rgba(90, 83, 71, 0.35);
+  width: 100%;
+  max-width: 540px;
+}
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.5rem;
+}
+.modal-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 2px dashed var(--bg-deep);
+}

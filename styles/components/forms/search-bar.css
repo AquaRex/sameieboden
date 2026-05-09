@@ -1,0 +1,27 @@
+/* ==========================================================================
+   Search bar — large pill-shaped input with embedded SVG icon
+   ========================================================================== */
+
+.search { display: block; }
+.search input {
+  width: 100%;
+  padding: 0.95rem 1.1rem 0.95rem 2.9rem;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  border: 2px solid var(--bg-deep);
+  border-radius: var(--radius-pill);
+  background: var(--surface)
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%238b8274' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><path d='m21 21-4.3-4.3'/></svg>")
+    no-repeat 1.05rem center;
+  box-shadow: var(--shadow-btn);
+  transition: border-color var(--duration-hover) var(--easing),
+              box-shadow var(--duration-hover) var(--easing);
+}
+.search input::placeholder { color: var(--muted); font-weight: 600; }
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 3px 0 var(--accent-deep), 0 0 0 4px var(--accent-soft);
+}

@@ -1,22 +1,22 @@
-import { isLocal } from "./env.js?v=4";
-import { store } from "./store.js?v=3";
-import { filterItems } from "./search.js?v=3";
-import { createSearchBar } from "./components/searchBar.js?v=3";
-import { createTagFilters } from "./components/tagFilters.js?v=3";
-import { createGrid } from "./components/grid.js?v=3";
-import { createViewToggle } from "./components/viewToggle.js?v=3";
-import { createLightbox } from "./components/lightbox.js?v=3";
-import { createItemDetail } from "./components/itemDetail.js?v=24";
-import { createHousePicker } from "./components/housePicker.js?v=1";
-import { createHouseBadge } from "./components/houseBadge.js?v=2";
-import { createCalendarView } from "./components/calendarView.js?v=17";
-import { createButton } from "./components/button.js?v=1";
-import { createInstallButton } from "./components/installButton.js?v=2";
-import { confirmDialog } from "./components/confirmDialog.js?v=1";
-import { createHamburgerMenu } from "./components/hamburgerMenu.js?v=1";
-import { getCurrentHouse, subscribeCurrentHouse } from "./currentHouse.js?v=1";
-import { loadItems } from "./serverApi.js?v=3";
-import { loadAllState, startRealtime, subscribeState } from "./state.js?v=15";
+import { isLocal } from "./core/env.js?v=1";
+import { store } from "./core/store.js?v=1";
+import { filterItems } from "./core/search.js?v=1";
+import { createSearchBar } from "./components/forms/searchBar.js?v=1";
+import { createTagFilters } from "./components/forms/tagFilters.js?v=1";
+import { createGrid } from "./components/items/grid.js?v=1";
+import { createViewToggle } from "./components/interactives/viewToggle.js?v=1";
+import { createLightbox } from "./components/overlays/lightbox.js?v=1";
+import { createItemDetail } from "./components/items/itemDetail.js?v=1";
+import { createHousePicker } from "./components/overlays/housePicker.js?v=1";
+import { createHouseBadge } from "./components/interactives/houseBadge.js?v=1";
+import { createCalendarView } from "./components/calendar/calendarView.js?v=1";
+import { createButton } from "./components/interactives/button.js?v=1";
+import { createInstallButton } from "./components/interactives/installButton.js?v=1";
+import { confirmDialog } from "./components/overlays/confirmDialog.js?v=1";
+import { createHamburgerMenu } from "./components/interactives/hamburgerMenu.js?v=1";
+import { getCurrentHouse, subscribeCurrentHouse } from "./core/currentHouse.js?v=1";
+import { loadItems } from "./core/serverApi.js?v=1";
+import { loadAllState, startRealtime, subscribeState } from "./core/state.js?v=1";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -159,8 +159,8 @@ async function bootstrapEditable() {
     toolbarMod,
     serverApiMod,
   ] = await Promise.all([
-    import("../sameiebodenlocal/js/components/editor.js?v=3"),
-    import("../sameiebodenlocal/js/components/toolbar.js?v=5"),
+    import("../sameiebodenlocal/js/components/editor.js?v=1"),
+    import("../sameiebodenlocal/js/components/toolbar.js?v=1"),
     import("../sameiebodenlocal/js/serverWriteApi.js?v=1"),
   ]);
   const { createEditor } = editorMod;

@@ -1,0 +1,19 @@
+/* ==========================================================================
+   House picker — dialog for picking the active house
+   ========================================================================== */
+
+.hp-dialog { padding: 1.5rem 1.25rem !important; max-width: 460px; }
+.hp-title { margin: 0 0 0.25rem; text-align: center; }
+.hp-sub {
+  margin: 0 0 1rem;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  text-align: center;
+}
+.hp-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 600px) {
+  .hp-grid { grid-template-columns: repeat(3, 1fr); }
+}
