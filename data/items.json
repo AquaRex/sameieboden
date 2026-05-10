@@ -55,13 +55,13 @@
     "id": "seed-5",
     "slug": "hekksaks",
     "name": "Hekksaks",
-    "description": "Fiskars HSM92 hekksaks med girutveksling.",
+    "description": "Fiskars HSX92 hekksaks med girutveksling.",
     "tags": [
       "hage"
     ],
     "image": "images/hekksaks.jpg?v=1778221951096",
     "imageThumb": "images/hekksaks-thumb.jpg?v=1778221951096",
-    "imagePos": "50.0% 8.6%",
+    "imagePos": "50.0% 50.0%",
     "imageZoom": 1
   },
   {

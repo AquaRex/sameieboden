@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Maskable: full-bleed accent so platform masks (circle/squircle) crop cleanly.
+       House sits inside the 80% safe zone (radius ~205 from center). -->
+  <rect width="512" height="512" fill="#7fb886"/>
+  <g transform="translate(256 256) rotate(-4)" fill="#fff">
+    <g transform="translate(-88 -88) scale(5.5)">
+      <path d="M4 14 L16 4 L28 14 V27 a1 1 0 0 1 -1 1 H5 a1 1 0 0 1 -1 -1 Z"/>
+    </g>
+  </g>
+</svg>
