@@ -10,11 +10,16 @@
 // visitor id, cookies. Country is only inferred loosely from timezone.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778420168";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778420598";
+import { isLocal } from "./env.js?v=1778420598";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
 });
+
+// Skip writes when running on localhost so dev/test traffic doesn't pollute
+// the production analytics. Reads (admin page) still work normally.
+const TRACKING_DISABLED = isLocal();
 
 function safe(fn, fallback = null) {
   try { return fn(); } catch { return fallback; }
@@ -47,6 +52,7 @@ function collectContext() {
 // Fire-and-forget. Never throws, never blocks the UI.
 export function logHousePick(house, { previousHouse = null } = {}) {
   if (!house) return;
+  if (TRACKING_DISABLED) return;
   const row = { house, previous_house: previousHouse || null, source: "pick", ...collectContext() };
   supabase
     .from("house_picks")
@@ -66,6 +72,7 @@ const OPEN_SESSION_KEY = "sb.analytics.openLogged";
 
 export function logSessionOpen(house) {
   if (!house) return;
+  if (TRACKING_DISABLED) return;
   try {
     if (sessionStorage.getItem(OPEN_SESSION_KEY) === "1") return;
     sessionStorage.setItem(OPEN_SESSION_KEY, "1");

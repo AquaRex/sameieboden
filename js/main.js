@@ -1,21 +1,21 @@
-import { isLocal } from "./core/env.js?v=1778420168";
-import { store } from "./core/store.js?v=1778420168";
-import { filterItems } from "./core/search.js?v=1778420168";
-import { createSearchBar } from "./components/forms/searchBar.js?v=1778420168";
-import { createTagFilters } from "./components/forms/tagFilters.js?v=1778420168";
-import { createGrid } from "./components/items/grid.js?v=1778420168";
-import { createViewToggle } from "./components/interactives/viewToggle.js?v=1778420168";
-import { createLightbox } from "./components/overlays/lightbox.js?v=1778420168";
-import { createItemDetail } from "./components/items/itemDetail.js?v=1778420168";
-import { createHousePicker } from "./components/overlays/housePicker.js?v=1778420168";
-import { createHouseBadge } from "./components/interactives/houseBadge.js?v=1778420168";
-import { createCalendarView } from "./components/calendar/calendarView.js?v=1778420168";
-import { createButton } from "./components/interactives/button.js?v=1778420168";
-import { createInstallButton } from "./components/interactives/installButton.js?v=1778420168";
-import { confirmDialog } from "./components/overlays/confirmDialog.js?v=1778420168";
-import { createHamburgerMenu } from "./components/interactives/hamburgerMenu.js?v=1778420168";
-import { createChatLauncher } from "./components/chat/chatLauncher.js?v=1778420168";
-import { createChatWindow } from "./components/chat/chatWindow.js?v=1778420168";
+import { isLocal } from "./core/env.js?v=1778420598";
+import { store } from "./core/store.js?v=1778420598";
+import { filterItems } from "./core/search.js?v=1778420598";
+import { createSearchBar } from "./components/forms/searchBar.js?v=1778420598";
+import { createTagFilters } from "./components/forms/tagFilters.js?v=1778420598";
+import { createGrid } from "./components/items/grid.js?v=1778420598";
+import { createViewToggle } from "./components/interactives/viewToggle.js?v=1778420598";
+import { createLightbox } from "./components/overlays/lightbox.js?v=1778420598";
+import { createItemDetail } from "./components/items/itemDetail.js?v=1778420598";
+import { createHousePicker } from "./components/overlays/housePicker.js?v=1778420598";
+import { createHouseBadge } from "./components/interactives/houseBadge.js?v=1778420598";
+import { createCalendarView } from "./components/calendar/calendarView.js?v=1778420598";
+import { createButton } from "./components/interactives/button.js?v=1778420598";
+import { createInstallButton } from "./components/interactives/installButton.js?v=1778420598";
+import { confirmDialog } from "./components/overlays/confirmDialog.js?v=1778420598";
+import { createHamburgerMenu } from "./components/interactives/hamburgerMenu.js?v=1778420598";
+import { createChatLauncher } from "./components/chat/chatLauncher.js?v=1778420598";
+import { createChatWindow } from "./components/chat/chatWindow.js?v=1778420598";
 
 // ---------------------------------------------------------------------------
 // CHAT FEATURE FLAG
@@ -26,10 +26,10 @@ import { createChatWindow } from "./components/chat/chatWindow.js?v=1778420168";
 // "Meldinger" tab) is already wired up and will start working immediately.
 // ---------------------------------------------------------------------------
 const CHAT_ENABLED = false;
-import { getCurrentHouse, subscribeCurrentHouse } from "./core/currentHouse.js?v=1778420168";
-import { loadItems } from "./core/serverApi.js?v=1778420168";
-import { loadAllState, startRealtime, subscribeState } from "./core/state.js?v=1778420168";
-import { logSessionOpen } from "./core/analytics.js?v=1778420168";
+import { getCurrentHouse, subscribeCurrentHouse } from "./core/currentHouse.js?v=1778420598";
+import { loadItems } from "./core/serverApi.js?v=1778420598";
+import { loadAllState, startRealtime, subscribeState } from "./core/state.js?v=1778420598";
+import { logSessionOpen } from "./core/analytics.js?v=1778420598";
 
 const editable = isLocal();
 let currentQuery = "";
@@ -194,9 +194,9 @@ async function bootstrapEditable() {
     toolbarMod,
     serverApiMod,
   ] = await Promise.all([
-    import("../sameiebodenlocal/js/components/editor.js?v=1778420168"),
-    import("../sameiebodenlocal/js/components/toolbar.js?v=1778420168"),
-    import("../sameiebodenlocal/js/serverWriteApi.js?v=1778420168"),
+    import("../sameiebodenlocal/js/components/editor.js?v=1778420598"),
+    import("../sameiebodenlocal/js/components/toolbar.js?v=1778420598"),
+    import("../sameiebodenlocal/js/serverWriteApi.js?v=1778420598"),
   ]);
   const { createEditor } = editorMod;
   const { createToolbar } = toolbarMod;
@@ -213,10 +213,10 @@ async function bootstrapEditable() {
         try {
           const slug = slugify(data.name);
           const fullPath = await uploadImage(slug, data.image);
-          data.image = `${fullPath}?v=1778420168${cacheBust}`;
+          data.image = `${fullPath}?v=1778420598${cacheBust}`;
           if (data.imageThumb && data.imageThumb.startsWith("data:")) {
             const thumbPath = await uploadImage(`${slug}-thumb`, data.imageThumb);
-            data.imageThumb = `${thumbPath}?v=1778420168${cacheBust}`;
+            data.imageThumb = `${thumbPath}?v=1778420598${cacheBust}`;
           }
         } catch (err) {
           console.warn("Image upload failed, keeping inline data URL:", err);
@@ -225,7 +225,7 @@ async function bootstrapEditable() {
         try {
           const slug = slugify(data.name);
           const thumbPath = await uploadImage(`${slug}-thumb`, data.imageThumb);
-          data.imageThumb = `${thumbPath}?v=1778420168${cacheBust}`;
+          data.imageThumb = `${thumbPath}?v=1778420598${cacheBust}`;
         } catch (err) {
           console.warn("Thumb upload failed:", err);
         }

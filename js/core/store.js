@@ -1,9 +1,9 @@
 // Single source of truth for equipment data. Pub/sub so components react
 // to changes without knowing about each other.
 
-import { DEFAULT_EQUIPMENT } from "./defaultData.js?v=1778420168";
-import { uid } from "../helpers/dom.js?v=1778420168";
-import { slugify } from "./serverApi.js?v=1778420168";
+import { DEFAULT_EQUIPMENT } from "./defaultData.js?v=1778420598";
+import { uid } from "../helpers/dom.js?v=1778420598";
+import { slugify } from "./serverApi.js?v=1778420598";
 
 const STORAGE_KEY = "bvs.equipment.v1";
 

@@ -1,7 +1,7 @@
 // Composer: textarea + send button. Enter sends, Shift+Enter inserts newline.
 
-import { el } from "../../helpers/dom.js?v=1778420168";
-import { createButton } from "../interactives/button.js?v=1778420168";
+import { el } from "../../helpers/dom.js?v=1778420598";
+import { createButton } from "../interactives/button.js?v=1778420598";
 
 const SEND_ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="currentColor" d="M2.5 21 22 12 2.5 3v7l13 2-13 2z"/></svg>`;
 const EMOJI_ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8.5 10h.01M15.5 10h.01M8.5 14.5c1 1 2.2 1.5 3.5 1.5s2.5-.5 3.5-1.5"/></svg>`;
