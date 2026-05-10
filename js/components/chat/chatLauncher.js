@@ -2,13 +2,13 @@
 // Click toggles the chat window. Shows an unread badge that updates live
 // from the chat cache.
 
-import { el } from "../../helpers/dom.js?v=1778425101";
+import { el } from "../../helpers/dom.js?v=1778425356";
 import {
   loadChat,
   startChatRealtime,
   subscribeChat,
   getTotalUnread,
-} from "../../core/chat.js?v=1778425101";
+} from "../../core/chat.js?v=1778425356";
 
 const ICON = `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="currentColor" d="M6 5h20a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H13.4l-5.2 4.4A1 1 0 0 1 6.6 28V8a3 3 0 0 1 3-3z"/></svg>`;
 

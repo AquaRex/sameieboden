@@ -30,45 +30,72 @@
 .admin-input {
   font: inherit;
   padding: 0.45rem 0.6rem;
-  border: 2px solid var(--bg-deeper);
+  border: 2px solid var(--ac-band-edge, #d9cfa6);
   border-radius: 10px;
-  background: #fff;
-  color: var(--ink);
+  background: #fffaea;
+  color: var(--ac-ink, #855c24);
   min-width: 10rem;
 }
 .admin-summary {
   margin: 0 0 0.75rem;
   font-size: 0.9rem;
   font-weight: 700;
-  color: var(--ink-soft);
+  color: var(--ac-ink, #855c24);
 }
+/* ----- Animal-Crossing inspired list -------------------------------------- */
+/* Two alternating row colours, rounded card, custom scrollbar.              */
+:root {
+  --ac-band-a: #f3ecd0;       /* lighter band */
+  --ac-band-b: #ede4c2;       /* darker band */
+  --ac-band-edge: #d9cfa6;    /* outer rim / scrollbar track */
+  --ac-band-thumb: #b9a96a;   /* scrollbar thumb */
+  --ac-header: #e2d5a3;       /* header strip */
+  --ac-ink: #855c24;          /* warm brown body text */
+  --ac-header-ink: #855c24;
+  --ac-row-hover: #f8f1d6;
+}
+
 .admin-table-wrap {
-  overflow-x: auto;
-  border: 2px solid var(--bg-deeper);
-  border-radius: 14px;
-  background: #fff;
+  position: relative;
+  overflow: auto;
+  max-height: 70vh;
+  border: 2px solid var(--ac-band-edge);
+  border-radius: 18px;
+  background: var(--ac-band-a);
+  padding: 6px;                /* lets the rounded card breathe inside the rim */
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
 }
 .admin-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 0.92rem;
+  background: var(--ac-band-a);
+  border-radius: 12px;
+  overflow: hidden;
 }
 .admin-table th,
 .admin-table td {
   padding: 0.6rem 0.85rem;
   text-align: left;
-  border-bottom: 1px solid var(--bg-deeper);
+  border: none;
+  color: var(--ac-ink);
 }
 .admin-table thead th {
-  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--ac-header);
   font-weight: 800;
   text-transform: uppercase;
   font-size: 0.75rem;
   letter-spacing: 0.04em;
-  color: var(--ink-soft);
+  color: var(--ac-header-ink);
+  box-shadow: inset 0 -2px 0 var(--ac-band-edge);
 }
-.admin-table tbody tr:last-child td { border-bottom: none; }
-.admin-table tbody tr:hover { background: var(--bg); }
+.admin-table tbody tr:nth-child(odd)  td { background: var(--ac-band-a); }
+.admin-table tbody tr:nth-child(even) td { background: var(--ac-band-b); }
+.admin-table tbody tr:hover td { background: var(--ac-row-hover); }
 .admin-th-actions, .admin-td-actions { width: 2.5rem; text-align: right; }
 
 /* Sortable column headers */
@@ -76,8 +103,8 @@
   cursor: pointer;
   user-select: none;
 }
-.admin-table th.is-sortable:hover { color: var(--ink); }
-.admin-table th.is-sorted { color: var(--accent-ink); }
+.admin-table th.is-sortable:hover { color: #5e3f15; }
+.admin-table th.is-sorted { color: #5e3f15; }
 .admin-table th .sort-arrow {
   display: inline-block;
   margin-left: 0.3em;
@@ -85,13 +112,43 @@
   opacity: 0.55;
 }
 .admin-table th.is-sorted .sort-arrow { opacity: 1; }
+
 .admin-empty {
   padding: 2rem;
   text-align: center;
-  color: var(--ink-soft);
+  color: var(--ac-header-ink);
   font-weight: 700;
+  background: var(--ac-band-a);
+  border-radius: 12px;
 }
 .admin-td-desc { max-width: 24rem; white-space: pre-wrap; word-break: break-word; }
+
+/* Animal-Crossing styled scrollbar */
+.admin-table-wrap {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ac-band-thumb) var(--ac-band-edge);
+}
+.admin-table-wrap::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+.admin-table-wrap::-webkit-scrollbar-track {
+  background: var(--ac-band-edge);
+  border-radius: 999px;
+  margin: 6px;
+}
+.admin-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--ac-band-thumb);
+  border-radius: 999px;
+  border: 2px solid var(--ac-band-edge);
+  min-height: 28px;
+}
+.admin-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: #a4934f;
+}
+.admin-table-wrap::-webkit-scrollbar-corner {
+  background: var(--ac-band-edge);
+}
 
 @media (max-width: 600px) {
   .admin-input { min-width: 0; width: 100%; }
