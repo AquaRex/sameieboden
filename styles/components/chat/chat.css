@@ -54,9 +54,6 @@
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
 }
 
-/* Lift the install button above the launcher when both render in the corner */
-.install-mount { padding-right: 76px; }
-
 @media (max-width: 600px) {
   .chat-launcher {
     width: 56px;
