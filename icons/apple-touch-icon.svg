@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <!-- Full-bleed accent so the OS/browser rounded mask is the only frame.
-       Avoids a visible "card" on Android's PWA splash (background_color = cream). -->
+  <!-- Apple touch icon: full-bleed green so iOS's automatic rounded-corner
+       mask is the only frame, and the splash screen has no inner "white box". -->
   <rect width="512" height="512" fill="#7fb886"/>
   <g transform="translate(256 256) rotate(-4)" fill="#fff">
     <!-- House path matches the hero badge (32x32 viewBox).
-         Scale 9 -> house ~270px wide (~55% of canvas, like the hero badge ratio). -->
+         Scale 9 -> house ~270px wide inside 512px tile (~55%, like the hero badge ratio). -->
     <g transform="translate(-144 -144) scale(9)">
       <path d="M4 14 L16 4 L28 14 V27 a1 1 0 0 1 -1 1 H5 a1 1 0 0 1 -1 -1 Z"/>
     </g>
