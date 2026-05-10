@@ -3,7 +3,7 @@
 // pointing users to the Share menu when they're not already running as a
 // standalone app. The button is persistent — only `appinstalled` hides it.
 
-import { el } from "../../helpers/dom.js?v=1778408805";
+import { el } from "../../helpers/dom.js?v=1778420168";
 
 function isStandalone() {
   return (

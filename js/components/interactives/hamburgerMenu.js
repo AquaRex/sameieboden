@@ -2,7 +2,7 @@
 // rarely-used global actions (calendar, house badge, etc.). Caller mounts
 // arbitrary nodes into `panel`.
 
-import { el } from "../../helpers/dom.js?v=1778408805";
+import { el } from "../../helpers/dom.js?v=1778420168";
 
 const ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><rect x="3" y="5" width="18" height="2.4" rx="1.2" fill="currentColor"/><rect x="3" y="10.8" width="18" height="2.4" rx="1.2" fill="currentColor"/><rect x="3" y="16.6" width="18" height="2.4" rx="1.2" fill="currentColor"/></svg>`;
 

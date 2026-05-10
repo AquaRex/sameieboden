@@ -1,5 +1,5 @@
-import { el } from "../../helpers/dom.js?v=1778408805";
-import { getState } from "../../core/state.js?v=1778408805";
+import { el } from "../../helpers/dom.js?v=1778420168";
+import { getState } from "../../core/state.js?v=1778420168";
 
 export function createCard(item, { editable, onEdit, onDelete, onOpen }) {
   const cardSrc = item.imageThumb || item.image;

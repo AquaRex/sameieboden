@@ -12,7 +12,7 @@
 // separate rows, one per contiguous block.
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778408805";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778420168";
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
