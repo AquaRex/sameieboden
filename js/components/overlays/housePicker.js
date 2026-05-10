@@ -1,9 +1,9 @@
 // Modal asking "which house are you?". Used on first load and when the
 // user clicks the badge to switch.
 
-import { el, clear } from "../../helpers/dom.js?v=1";
-import { HOUSES } from "../../core/supabaseConfig.js?v=1";
-import { getCurrentHouse, setCurrentHouse } from "../../core/currentHouse.js?v=1";
+import { el, clear } from "../../helpers/dom.js?v=1778408805";
+import { HOUSES } from "../../core/supabaseConfig.js?v=1778408805";
+import { getCurrentHouse, setCurrentHouse } from "../../core/currentHouse.js?v=1778408805";
 
 export function createHousePicker() {
   const grid = el("div", { class: "id-house-grid hp-grid" });
