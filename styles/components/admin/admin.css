@@ -70,6 +70,21 @@
 .admin-table tbody tr:last-child td { border-bottom: none; }
 .admin-table tbody tr:hover { background: var(--bg); }
 .admin-th-actions, .admin-td-actions { width: 2.5rem; text-align: right; }
+
+/* Sortable column headers */
+.admin-table th.is-sortable {
+  cursor: pointer;
+  user-select: none;
+}
+.admin-table th.is-sortable:hover { color: var(--ink); }
+.admin-table th.is-sorted { color: var(--accent-ink); }
+.admin-table th .sort-arrow {
+  display: inline-block;
+  margin-left: 0.3em;
+  font-size: 0.7em;
+  opacity: 0.55;
+}
+.admin-table th.is-sorted .sort-arrow { opacity: 1; }
 .admin-empty {
   padding: 2rem;
   text-align: center;
