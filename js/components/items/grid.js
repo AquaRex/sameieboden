@@ -1,5 +1,5 @@
-import { el, clear } from "../../helpers/dom.js?v=1778425356";
-import { createCard } from "./card.js?v=1778425356";
+import { el, clear } from "../../helpers/dom.js?v=1778425523";
+import { createCard } from "./card.js?v=1778425523";
 
 export function createGrid({ editable, onEdit, onDelete, onOpen, view = "grid" }) {
   const list = el("ul", {

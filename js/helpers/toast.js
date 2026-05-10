@@ -1,6 +1,6 @@
 // Lightweight themed toast notifications.
 
-import { el } from "./dom.js?v=1778425356";
+import { el } from "./dom.js?v=1778425523";
 
 let container = null;
 

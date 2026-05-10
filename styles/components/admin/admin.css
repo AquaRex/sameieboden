@@ -53,6 +53,9 @@
   --ac-ink: #855c24;          /* warm brown body text */
   --ac-header-ink: #855c24;
   --ac-row-hover: #f8f1d6;
+  --ac-num-bg: #e8dcb5;       /* tan chip behind important numbers */
+  --ac-num-ink: #d65a4a;      /* red-orange digits */
+  --ac-divider: #b9a96a;      /* dashed row separator */
 }
 
 .admin-table-wrap {
@@ -96,7 +99,35 @@
 .admin-table tbody tr:nth-child(odd)  td { background: var(--ac-band-a); }
 .admin-table tbody tr:nth-child(even) td { background: var(--ac-band-b); }
 .admin-table tbody tr:hover td { background: var(--ac-row-hover); }
+/* Dashed connector under each row, like the leader-dots in AC */
+.admin-table tbody td {
+  border-bottom: 2px dashed var(--ac-divider);
+}
+.admin-table tbody tr:last-child td { border-bottom: none; }
 .admin-th-actions, .admin-td-actions { width: 2.5rem; text-align: right; }
+
+/* Number chip — small tan box with red-orange digits, like AC counters */
+.admin-table .ac-num {
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.admin-table .ac-num .ac-num-chip {
+  display: inline-block;
+  min-width: 2.2em;
+  padding: 0.15em 0.55em;
+  background: var(--ac-num-bg);
+  color: var(--ac-num-ink);
+  font-weight: 800;
+  border-radius: 8px;
+  box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+.admin-table .ac-num .ac-num-max {
+  margin-left: 0.4em;
+  color: var(--ac-ink);
+  font-weight: 700;
+}
 
 /* Sortable column headers */
 .admin-table th.is-sortable {
