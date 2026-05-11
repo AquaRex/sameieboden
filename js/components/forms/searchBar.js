@@ -1,4 +1,4 @@
-import { el } from "../../helpers/dom.js?v=1778486860";
+import { el } from "../../helpers/dom.js?v=1778488612";
 
 export function createSearchBar({ onChange }) {
   const input = el("input", {

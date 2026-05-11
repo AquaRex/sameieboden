@@ -16,11 +16,11 @@
 //   editor.open({ event: existingEv });                  // edit
 //   editor.close();
 
-import { el, clear } from "../../helpers/dom.js?v=1778486860";
-import { createButton } from "../interactives/button.js?v=1778486860";
-import { createTimePicker } from "../forms/timePicker.js?v=1778486860";
-import { createDropdown } from "../forms/dropdown.js?v=1778486860";
-import { createDatePicker } from "../forms/datePicker.js?v=1778486860";
+import { el, clear } from "../../helpers/dom.js?v=1778488612";
+import { createButton } from "../interactives/button.js?v=1778488612";
+import { createTimePicker } from "../forms/timePicker.js?v=1778488612";
+import { createDropdown } from "../forms/dropdown.js?v=1778488612";
+import { createDatePicker } from "../forms/datePicker.js?v=1778488612";
 
 function parseDateOnly(iso) {
   if (!iso) return Date.now();
@@ -60,7 +60,7 @@ export function createEventEditor({
   const titleInput = el("input", { type: "text", maxLength: 80, placeholder: "F.eks. Dugnad" });
   const descInput = el("textarea", { rows: 3, maxLength: 500, placeholder: "Valgfri beskrivelse" });
   const fromPicker = createTimePicker({ value: "", minuteStep: 15, defaultTime: "12:00" });
-  const toPicker = createTimePicker({ value: "", minuteStep: 15, defaultTime: "13:00" });
+  const toPicker = createTimePicker({ value: "", minuteStep: 15, defaultTime: "13:00", allowOvernight: true });
   const allDayCb = el("input", { type: "checkbox" });
   const fellesCb = el("input", { type: "checkbox" });
 

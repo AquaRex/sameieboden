@@ -12,18 +12,18 @@
 //   tp.setValue("13:30");   // also accepts "" / null -> falls back to defaultTime
 //   tp.setDisabled(true);
 
-import { el } from "../../helpers/dom.js?v=1778486860";
+import { el } from "../../helpers/dom.js?v=1778488612";
 
 const CHEV_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
 const CHEV_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
 function pad(n) { return String(n).padStart(2, "0"); }
 
-function parse(v) {
+function parse(v, maxHour = 23) {
   if (!v) return null;
   const m = String(v).match(/^(\d{1,2}):(\d{1,2})$/);
   if (!m) return null;
-  const h = Math.max(0, Math.min(23, parseInt(m[1], 10)));
+  const h = Math.max(0, Math.min(maxHour, parseInt(m[1], 10)));
   const mi = Math.max(0, Math.min(59, parseInt(m[2], 10)));
   return { h, m: mi };
 }
@@ -32,16 +32,23 @@ export function createTimePicker({
   value = "",
   minuteStep = 5,
   defaultTime = "12:00",
+  allowOvernight = false,
   onChange,
 } = {}) {
   const step = Math.max(1, Math.min(60, minuteStep | 0));
-  const fallback = parse(defaultTime) || { h: 12, m: 0 };
+  // Overnight mode lets the hour run 0..47 so a "Til" field can express
+  // "24:00" (end of day) and "01:00" next day (stored as "25:00").
+  const HOURS = allowOvernight ? 48 : 24;
+  const fallback = parse(defaultTime, HOURS - 1) || { h: 12, m: 0 };
 
-  let current = parse(value) || { ...fallback };
+  let current = parse(value, HOURS - 1) || { ...fallback };
   let disabled = false;
 
   const hourEl = el("span", { class: "tp-num" });
   const minEl = el("span", { class: "tp-num" });
+  const dayChip = allowOvernight
+    ? el("span", { class: "tp-day-chip", textContent: "+1d", hidden: true })
+    : null;
 
   const hourTile = buildTile({
     label: "Time",
@@ -61,6 +68,7 @@ export function createTimePicker({
   const sepEl = el("span", { class: "tp-sep", textContent: ":" });
 
   const root = el("div", { class: "tp-root" }, [hourTile, sepEl, minTile]);
+  if (dayChip) root.appendChild(dayChip);
 
   render();
 
@@ -171,7 +179,7 @@ export function createTimePicker({
   }
 
   function bumpHour(delta) {
-    current.h = (current.h + delta + 24) % 24;
+    current.h = (current.h + delta + HOURS) % HOURS;
     emit();
   }
 
@@ -180,7 +188,7 @@ export function createTimePicker({
     total += delta * step;
     if (delta > 0) total = Math.ceil(total / step) * step;
     else total = Math.floor(total / step) * step;
-    total = ((total % (24 * 60)) + 24 * 60) % (24 * 60);
+    total = ((total % (HOURS * 60)) + HOURS * 60) % (HOURS * 60);
     current.h = Math.floor(total / 60);
     current.m = total % 60;
     emit();
@@ -192,7 +200,15 @@ export function createTimePicker({
   }
 
   function render() {
-    hourEl.textContent = pad(current.h);
+    if (allowOvernight) {
+      // 0..24 shown raw ("00".."24"); 25..47 shown as "01".."23" with +1d chip.
+      const overnight = current.h > 24;
+      const displayHour = overnight ? current.h - 24 : current.h;
+      hourEl.textContent = pad(displayHour);
+      if (dayChip) dayChip.hidden = !overnight;
+    } else {
+      hourEl.textContent = pad(current.h);
+    }
     minEl.textContent = pad(current.m);
     root.classList.toggle("is-disabled", disabled);
   }
@@ -202,7 +218,7 @@ export function createTimePicker({
   }
 
   function setValue(v) {
-    const parsed = parse(v);
+    const parsed = parse(v, HOURS - 1);
     current = parsed || { ...fallback };
     render();
   }

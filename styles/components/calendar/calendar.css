@@ -116,6 +116,12 @@
   border-color: #c98c00;
   color: #fff;
 }
+/* Continuation of an overnight event on the following day */
+.cal-event--spillover {
+  background: #fff8e3;
+  border-style: dashed;
+  font-style: italic;
+}
 .cal-event--more {
   justify-content: center;
   background: transparent;

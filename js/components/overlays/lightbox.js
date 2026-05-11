@@ -1,6 +1,6 @@
 // Full-image lightbox with prev/next navigation.
 
-import { el, clear } from "../../helpers/dom.js?v=1778486860";
+import { el, clear } from "../../helpers/dom.js?v=1778488612";
 
 export function createLightbox() {
   let items = [];

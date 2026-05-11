@@ -9,8 +9,8 @@
 //
 // Click a day to see full details, add a new event, or edit/remove your own.
 
-import { el, clear } from "../../helpers/dom.js?v=1778486860";
-import { DAY_MS, startOfDayMs } from "../../helpers/dates.js?v=1778486860";
+import { el, clear } from "../../helpers/dom.js?v=1778488612";
+import { DAY_MS, startOfDayMs } from "../../helpers/dates.js?v=1778488612";
 import {
   getAllCalendar,
   getEventsInWindow,
@@ -18,12 +18,12 @@ import {
   updateEvent,
   deleteEvent,
   subscribeState,
-} from "../../core/state.js?v=1778486860";
-import { getCurrentHouse } from "../../core/currentHouse.js?v=1778486860";
-import { createButton } from "../interactives/button.js?v=1778486860";
-import { createEventEditor } from "./eventEditor.js?v=1778486860";
-import { confirmDialog } from "../overlays/confirmDialog.js?v=1778486860";
-import { toast } from "../../helpers/toast.js?v=1778486860";
+} from "../../core/state.js?v=1778488612";
+import { getCurrentHouse } from "../../core/currentHouse.js?v=1778488612";
+import { createButton } from "../interactives/button.js?v=1778488612";
+import { createEventEditor } from "./eventEditor.js?v=1778488612";
+import { confirmDialog } from "../overlays/confirmDialog.js?v=1778488612";
+import { toast } from "../../helpers/toast.js?v=1778488612";
 
 const WEEK_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 const DAYS_BACK = 14;
@@ -168,13 +168,23 @@ export function createCalendarView({ getItems }) {
   function eventsForDay(ts) {
     const today = startOfDayMs();
     const dayIso = dateOnlyIso(ts);
+    const prevIso = dateOnlyIso(ts - DAY_MS);
     const out = [];
     for (const ev of events) {
-      if (ev.event_date !== dayIso) continue;
-      let kind = "future";
-      if (ts < today) kind = "past";
-      else if (ts === today) kind = "today";
-      out.push({ row: ev, kind });
+      if (ev.event_date === dayIso) {
+        let kind = "future";
+        if (ts < today) kind = "past";
+        else if (ts === today) kind = "today";
+        out.push({ row: ev, kind, spillover: false });
+        continue;
+      }
+      // Overnight spillover: event started yesterday with time_to past 24:00.
+      if (ev.event_date === prevIso && isOvernight(ev.time_to)) {
+        let kind = "future";
+        if (ts < today) kind = "past";
+        else if (ts === today) kind = "today";
+        out.push({ row: ev, kind, spillover: true });
+      }
     }
     out.sort((a, b) => (a.row.created_at || "").localeCompare(b.row.created_at || ""));
     return out;
@@ -251,15 +261,15 @@ export function createCalendarView({ getItems }) {
 
   function buildEventLine(entry) {
     if (entry.source === "event") {
-      const t = formatEventTime(entry.row);
+      const t = formatEventTime(entry.row, { spillover: !!entry.spillover });
       const label = entry.row.title || "";
       const tooltip = t ? `${entry.row.house} — ${t} ${label}` : `${entry.row.house} — ${label}`;
       return el("div", {
-        class: `cal-event cal-event--custom`,
+        class: `cal-event cal-event--custom${entry.spillover ? " cal-event--spillover" : ""}`,
         title: tooltip,
       }, [
         el("span", { class: "cal-event-house", textContent: entry.row.house || "?" }),
-        el("span", { class: "cal-event-name", textContent: label }),
+        el("span", { class: "cal-event-name", textContent: (entry.spillover ? "→ " : "") + label }),
       ]);
     }
     const item = itemBySlug(entry.row.slug);
@@ -323,9 +333,9 @@ export function createCalendarView({ getItems }) {
   function buildEventDetailRow(entry, mine) {
     const ev = entry.row;
     const text = el("div", { class: "cal-detail-text" }, [
-      el("div", { class: "cal-detail-name", textContent: ev.title }),
+      el("div", { class: "cal-detail-name", textContent: (entry.spillover ? "→ " : "") + (ev.title || "") }),
     ]);
-    const timeLabel = formatEventTime(ev);
+    const timeLabel = formatEventTime(ev, { spillover: !!entry.spillover });
     if (timeLabel) {
       text.appendChild(el("div", { class: "cal-detail-period", textContent: timeLabel }));
     }
@@ -387,9 +397,34 @@ function formatPeriod(row /*, kind */) {
   return `${fromStr} – ${toStr}`;
 }
 
-function formatEventTime(ev) {
-  if (ev.time_from && ev.time_to) return `${ev.time_from}–${ev.time_to}`;
+function formatEventTime(ev, { spillover = false } = {}) {
+  const to = ev.time_to;
+  const overnight = isOvernight(to);
+  const displayTo = overnight ? wrapPastMidnight(to) : to;
+  if (spillover) {
+    // Continuation on the next day — only show the end time.
+    return displayTo ? `→ ${displayTo}` : "→";
+  }
+  if (ev.time_from && to) {
+    const suffix = overnight ? " +1d" : "";
+    return `${ev.time_from}–${displayTo}${suffix}`;
+  }
   if (ev.time_from) return `Fra ${ev.time_from}`;
-  if (ev.time_to) return `Til ${ev.time_to}`;
+  if (to) return `Til ${displayTo}${overnight ? " +1d" : ""}`;
   return "";
+}
+
+function isOvernight(t) {
+  if (!t) return false;
+  const m = String(t).match(/^(\d{1,2}):/);
+  return !!m && parseInt(m[1], 10) >= 24;
+}
+
+function wrapPastMidnight(t) {
+  if (!t) return "";
+  const m = String(t).match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return t;
+  const h = parseInt(m[1], 10);
+  if (h < 24) return t;
+  return String(h - 24).padStart(2, "0") + ":" + m[2];
 }
