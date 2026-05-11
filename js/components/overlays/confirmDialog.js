@@ -1,8 +1,8 @@
 // Themed confirm dialog. Replaces native window.confirm with an in-app modal
 // matching the AC theme. Single shared instance; returns a Promise<boolean>.
 
-import { el } from "../../helpers/dom.js?v=1778489126";
-import { createButton } from "../interactives/button.js?v=1778489126";
+import { el } from "../../helpers/dom.js?v=1778513337";
+import { createButton } from "../interactives/button.js?v=1778513337";
 
 let instance = null;
 

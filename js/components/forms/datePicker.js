@@ -11,7 +11,7 @@
 //   picker.setValue("2026-12-31");
 //   picker.getValue(); // "YYYY-MM-DD"
 
-import { el, clear } from "../../helpers/dom.js?v=1778489126";
+import { el, clear } from "../../helpers/dom.js?v=1778513337";
 
 const WEEK_LABELS = ["Man", "Tir", "Ons", "Tor", "Fre", "Lør", "Søn"];
 const MONTH_LABELS = [

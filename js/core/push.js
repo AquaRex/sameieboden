@@ -41,8 +41,8 @@
 // ---------------------------------------------------------------------------
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778489126";
-import { getCurrentHouse } from "./currentHouse.js?v=1778489126";
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from "./supabaseConfig.js?v=1778513337";
+import { getCurrentHouse } from "./currentHouse.js?v=1778513337";
 
 // VAPID public key. Empty = push disabled (the UI hides the toggle and the
 // rest of the app works normally). The matching PRIVATE key lives only as a

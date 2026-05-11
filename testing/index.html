@@ -6,20 +6,24 @@
   <meta http-equiv="Cache-Control" content="no-cache, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta name="theme-color" content="#fdfbe5" />
-  <title>Sameieboden</title>
-  <meta name="description" content="Oversikt over felles utstyr og verktøy i Bedehusvegen Sameie." />
+  <title>Sameieboden — Testing</title>
+  <meta name="description" content="Test-versjon av Sameieboden med chat aktivert." />
+  <meta name="robots" content="noindex" />
+
+  <!-- All asset paths resolved from site root so this page can live in /testing/. -->
+  <base href="/" />
 
   <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
   <link rel="icon" type="image/svg+xml" href="icon.svg" />
-  
+
   <!-- iOS home-screen install -->
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="Sameieboden" />
+  <meta name="apple-mobile-web-app-title" content="Sameieboden Test" />
   <meta name="mobile-web-app-capable" content="yes" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,16 +31,33 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap">
   <link rel="stylesheet" href="styles/main.css?v=1778513337" />
 
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "wo1o3tn6rc");
-  </script>
+  <style>
+    /* Subtle "TESTING" ribbon so we always know which version we're on. */
+    .testing-ribbon {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      padding: 0.25rem 0.5rem;
+      background: #d65a4a;
+      color: #fff;
+      font: 700 0.78rem/1 "Nunito", system-ui, sans-serif;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      pointer-events: none;
+    }
+    body { padding-top: 1.6rem; }
+  </style>
+
+  <!-- Enable chat before main.js loads. -->
+  <script>window.__CHAT_ENABLED = true;</script>
 </head>
 <body>
+  <div class="testing-ribbon" aria-hidden="true">Testing — chat aktivert</div>
+
   <section class="hero">
     <div class="container hero-inner">
       <div id="ham-mount" class="ham-mount"></div>
@@ -65,7 +86,7 @@
         <p class="footer-title">Mangler noe i listen?</p>
         <p class="footer-text">Ta kontakt med Thomas Hetland</p>
       </div>
-      <p class="footer-meta">Bedehusvegen Sameie</p>
+      <p class="footer-meta">Bedehusvegen Sameie · Test</p>
       <p class="footer-meta">© Thomas Hetland</p>
     </div>
   </footer>
@@ -73,9 +94,6 @@
   <script type="module" src="js/main.js?v=1778513337"></script>
   <script>
     // Service worker for PWA install + offline support.
-    // (Previously disabled on localhost; enabled now so push notifications
-    // can be tested locally. Use Application → Service Workers in DevTools
-    // to unregister if dev edits are getting cached.)
     if ("serviceWorker" in navigator && location.protocol !== "file:") {
       window.addEventListener("load", () => {
         navigator.serviceWorker.register("sw.js").catch(() => {});
