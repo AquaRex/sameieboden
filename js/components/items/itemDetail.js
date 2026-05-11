@@ -1,18 +1,18 @@
 // Item detail modal: image left, info + actions right.
 // Reservation UI is delegated to createDayPicker.
 
-import { el, clear } from "../../helpers/dom.js?v=1778488612";
-import { toast } from "../../helpers/toast.js?v=1778488612";
-import { getCurrentHouse, subscribeCurrentHouse } from "../../core/currentHouse.js?v=1778488612";
+import { el, clear } from "../../helpers/dom.js?v=1778489126";
+import { toast } from "../../helpers/toast.js?v=1778489126";
+import { getCurrentHouse, subscribeCurrentHouse } from "../../core/currentHouse.js?v=1778489126";
 import {
   getState, getUpcoming, subscribeState, getHistory, getRecentHistory,
   useItem, reserveBlocks, endActive, cancelReservation,
-} from "../../core/state.js?v=1778488612";
-import { createDayPicker } from "../forms/dayPicker.js?v=1778488612";
-import { confirmDialog } from "../overlays/confirmDialog.js?v=1778488612";
-import { createButton } from "../interactives/button.js?v=1778488612";
-import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../../helpers/dates.js?v=1778488612";
-import { friendlyError } from "../../helpers/errors.js?v=1778488612";
+} from "../../core/state.js?v=1778489126";
+import { createDayPicker } from "../forms/dayPicker.js?v=1778489126";
+import { confirmDialog } from "../overlays/confirmDialog.js?v=1778489126";
+import { createButton } from "../interactives/button.js?v=1778489126";
+import { DAY_MS, startOfDayMs, formatDateTime, formatBlock, formatWhen } from "../../helpers/dates.js?v=1778489126";
+import { friendlyError } from "../../helpers/errors.js?v=1778489126";
 
 const STATUS_LABEL = {
   available: "Tilgjengelig",

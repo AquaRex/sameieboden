@@ -12,12 +12,23 @@
 //   tp.setValue("13:30");   // also accepts "" / null -> falls back to defaultTime
 //   tp.setDisabled(true);
 
-import { el } from "../../helpers/dom.js?v=1778488612";
+import { el } from "../../helpers/dom.js?v=1778489126";
 
 const CHEV_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 15 12 9 18 15"/></svg>';
 const CHEV_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>';
 
 function pad(n) { return String(n).padStart(2, "0"); }
+
+// Drop focus from a currently-focused text input so the mobile soft keyboard
+// doesn't reappear when the user starts interacting with the picker.
+function blurActiveInput() {
+  const a = document.activeElement;
+  if (!a || a === document.body) return;
+  const tag = a.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || a.isContentEditable) {
+    try { a.blur(); } catch (_) {}
+  }
+}
 
 function parse(v, maxHour = 23) {
   if (!v) return null;
@@ -120,6 +131,9 @@ export function createTimePicker({
     const start = (e) => {
       if (disabled) return;
       if (e.cancelable) e.preventDefault();
+      // Drop focus from any active text input so the mobile soft keyboard
+      // doesn't pop back open while the user adjusts the time.
+      blurActiveInput();
       fn();
       timeoutId = setTimeout(() => {
         intervalId = setInterval(() => fn(), 80);
@@ -145,6 +159,7 @@ export function createTimePicker({
     elNode.addEventListener("pointerdown", (e) => {
       if (disabled) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
+      blurActiveInput();
       active = true;
       pointerId = e.pointerId;
       startY = e.clientY;
