@@ -6,8 +6,8 @@
 // `showHouse` adds a small house tag above the bubble — used in the
 // broadcast view to distinguish senders, hidden in DMs.
 
-import { el } from "../../helpers/dom.js?v=1778425523";
-import { formatWhen } from "../../helpers/dates.js?v=1778425523";
+import { el } from "../../helpers/dom.js?v=1778486860";
+import { formatWhen } from "../../helpers/dates.js?v=1778486860";
 
 export function createMessageBubble(msg, { kind = "incoming", showHouse = false } = {}) {
   const cls = ["chat-bubble", `chat-bubble--${kind}`];

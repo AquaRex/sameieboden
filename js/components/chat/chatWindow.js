@@ -4,12 +4,12 @@
 //
 // Singleton: only one window exists at a time.
 
-import { el, clear } from "../../helpers/dom.js?v=1778425523";
-import { HOUSES } from "../../core/supabaseConfig.js?v=1778425523";
+import { el, clear } from "../../helpers/dom.js?v=1778486860";
+import { HOUSES } from "../../core/supabaseConfig.js?v=1778486860";
 import {
   getCurrentHouse,
   subscribeCurrentHouse,
-} from "../../core/currentHouse.js?v=1778425523";
+} from "../../core/currentHouse.js?v=1778486860";
 import {
   loadChat,
   startChatRealtime,
@@ -18,18 +18,18 @@ import {
   markSeen,
   getConversation,
   getConversationSummaries,
-} from "../../core/chat.js?v=1778425523";
-import { friendlyError } from "../../helpers/errors.js?v=1778425523";
-import { toast } from "../../helpers/toast.js?v=1778425523";
-import { createDropdown } from "../forms/dropdown.js?v=1778425523";
-import { createMessageBubble } from "./messageBubble.js?v=1778425523";
-import { createChatInput } from "./chatInput.js?v=1778425523";
+} from "../../core/chat.js?v=1778486860";
+import { friendlyError } from "../../helpers/errors.js?v=1778486860";
+import { toast } from "../../helpers/toast.js?v=1778486860";
+import { createDropdown } from "../forms/dropdown.js?v=1778486860";
+import { createMessageBubble } from "./messageBubble.js?v=1778486860";
+import { createChatInput } from "./chatInput.js?v=1778486860";
 import {
   isPushSupported,
   isSubscribed,
   subscribePush,
   unsubscribePush,
-} from "../../core/push.js?v=1778425523";
+} from "../../core/push.js?v=1778486860";
 
 const CLOSE_ICON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="currentColor" d="M6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12 19 6.4 17.6 5 12 10.6z"/></svg>`;
 const BELL_ON = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true"><path fill="currentColor" d="M12 22a2.2 2.2 0 0 0 2.2-2.2H9.8A2.2 2.2 0 0 0 12 22zm6-6V11a6 6 0 0 0-5-5.92V4a1 1 0 1 0-2 0v1.08A6 6 0 0 0 6 11v5l-2 2v1h16v-1z"/></svg>`;

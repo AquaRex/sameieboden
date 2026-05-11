@@ -60,6 +60,16 @@
   border-radius: var(--radius-pill);
   z-index: -1;
 }
+/* Square off the inner edge so the green highlight points crisply toward
+   the sibling button, while the outer edge stays rounded. */
+.view-btn:first-child[aria-pressed="true"]::before {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.view-btn:last-child[aria-pressed="true"]::before {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 .view-btn[aria-pressed="false"] { z-index: 1; }
 .view-btn-icon { display: inline-flex; align-items: center; justify-content: center; }
 .view-btn-icon svg { width: 14px; height: 14px; fill: currentColor; display: block; }
