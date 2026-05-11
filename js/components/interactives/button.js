@@ -12,7 +12,7 @@
 //
 // Optional `icon` is a raw SVG string (or any HTML) rendered before the label.
 
-import { el } from "../../helpers/dom.js?v=1778513337";
+import { el } from "../../helpers/dom.js?v=1778517012";
 
 const VARIANT_CLASS = {
   default: "btn",
